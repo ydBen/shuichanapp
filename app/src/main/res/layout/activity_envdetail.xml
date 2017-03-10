@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ECECEC"
+    >
+
+
+
+    <!-- 标题栏 -->
+    <RelativeLayout android:layout_width="match_parent"
+        android:id="@+id/title"
+        android:layout_height="44dp">
+
+    <Button
+        android:id="@+id/btn_back"
+        android:layout_width="wrap_content"
+        android:background="@drawable/back"
+        android:layout_marginLeft="10dp"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/area_title_Tv"
+            android:layout_width="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="溏口"
+            android:textSize="18sp"
+            android:layout_height="wrap_content"/>
+
+
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:background="@color/gray"
+        android:layout_alignParentBottom="true"
+        android:layout_height="0.5dp"></RelativeLayout>
+
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/tv_envL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@+id/title"
+        android:text="数据采集:"
+        android:textSize="18sp"/>
+
+
+
+
+    <RelativeLayout
+        android:id="@+id/tempitem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_envL"
+        android:layout_margin="15dp"
+        android:background="@drawable/corners_bg">
+
+        <ImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:padding="10dp"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/tem"/>
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="当前水温:"
+            android:padding="10dp"
+            android:layout_marginLeft="70dp"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/tvTemp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:padding="10dp"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00℃"
+            android:textSize="18sp"/>
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/humitem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tempitem"
+        android:layout_margin="15dp"
+        android:background="@drawable/corners_bg">
+
+        <ImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:padding="10dp"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/ph"/>
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="当前PH值:"
+            android:padding="10dp"
+            android:layout_marginLeft="70dp"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/tvPH"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:padding="10dp"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00.00"
+            android:textSize="18sp"/>
+
+    </RelativeLayout>
+
+
+
+
+    <RelativeLayout
+        android:id="@+id/winditem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/humitem"
+        android:layout_margin="15dp"
+        android:background="@drawable/corners_bg">
+
+        <ImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:padding="10dp"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/doo"/>
+
+        <TextView
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="当前溶解氧:"
+            android:padding="10dp"
+            android:layout_marginLeft="70dp"
+            android:textSize="18sp"/>
+
+        <TextView
+            android:id="@+id/tvDo"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:padding="10dp"
+            android:layout_gravity="right"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00.00mg/L"
+            android:textSize="18sp"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tv_conL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:layout_marginLeft="5dp"
+        android:layout_below="@+id/winditem"
+        android:text="设备控制:"
+        android:textSize="18sp"/>
+
+
+
+    <RelativeLayout
+        android:id="@+id/controlitem1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/controlitem"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/corners_bg">
+
+        <ImageView
+            android:id="@+id/iv_oo1"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:padding="10dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/control"/>
+
+        <TextView
+            android:id="@+id/tv_open1"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="增氧控制2:"
+            android:padding="10dp"
+            android:layout_marginLeft="70dp"
+            android:textSize="18sp"/>
+
+
+        <Switch
+            android:id="@+id/switch_button1"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="40dp"
+            android:background="@drawable/switch_btn"
+            android:checked="false"
+            android:text=""
+            android:textOff=""
+            android:textOn="" />
+    </RelativeLayout>
+
+
+
+    <RelativeLayout
+        android:id="@+id/controlitem"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_conL"
+        android:layout_margin="15dp"
+        android:background="@drawable/corners_bg">
+
+        <ImageView
+            android:id="@+id/iv_oo"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:padding="10dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/control"/>
+
+        <TextView
+            android:id="@+id/tv_open"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="增氧控制1:"
+            android:padding="10dp"
+            android:layout_marginLeft="70dp"
+            android:textSize="18sp"/>
+
+
+        <Switch
+            android:id="@+id/switch_button"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="40dp"
+            android:background="@drawable/switch_btn"
+            android:checked="false"
+            android:text=""
+            android:textOff=""
+            android:textOn="" />
+    </RelativeLayout>
+
+
+
+
+
+
+    <Button
+        android:id="@+id/historybtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@mipmap/historybtn"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"/>
+
+
+
+
+</RelativeLayout>

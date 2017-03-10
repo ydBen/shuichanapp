@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:padding="15dp">
+    <ImageView
+        android:id="@+id/area_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@mipmap/waterarea"
+        android:layout_marginLeft="10dp"/>
+    <TextView
+        android:id="@+id/water_area_Tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/area_iv"
+        android:textSize="18sp"
+        android:layout_marginLeft="30dp"
+        android:layout_centerVertical="true"
+        android:text="溏口1"/>
+    <ImageView
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="30dp"
+        android:src="@mipmap/arrow"
+        android:layout_marginLeft="100dp"/>
+
+</RelativeLayout>

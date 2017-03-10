@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:drop="http://schemas.android.com/tools"
+    android:background="@color/opensdk_cameralist_bg">
+
+    <!-- 标题栏 -->
+    <RelativeLayout android:layout_width="match_parent"
+        android:id="@+id/title"
+        android:layout_height="44dp">
+
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:background="@drawable/back"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/area_title_Tv"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="日常投放"
+                android:textSize="18sp"
+                android:layout_height="wrap_content"/>
+
+
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="@color/gray"
+            android:layout_alignParentBottom="true"
+            android:layout_height="0.5dp"></RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_buy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title"
+        android:background="#fff">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/throwicon"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="塘口:"
+                    />
+                <Spinner
+                    android:id="@+id/sp_area"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="20dp"
+                    >
+                </Spinner>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="类别:"
+                    />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="20dp">
+                    <Spinner
+                        android:id="@+id/sp_throw"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:layout_marginTop="10dp"
+                        >
+                    </Spinner>
+
+                    <Spinner
+                        android:id="@+id/sp_throwdetail"
+                        android:layout_width="wrap_content"
+                        android:layout_height="35dp"
+                        android:visibility="gone"
+                        >
+                    </Spinner>
+                </LinearLayout>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+
+
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/ll_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_buy"
+        android:background="#fff"
+        android:layout_marginTop="20dp">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/amounticon"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"/>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp">
+
+            <LinearLayout
+                android:layout_marginTop="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="物品名称:"/>
+                <com.jit.shuichan.ui.dropdownedit.DropEditText
+                    android:id="@+id/drop_edit"
+                    android:layout_width="100dp"
+                    android:layout_height="30dp"
+                    drop:drawableRight="@drawable/drop"
+                    drop:dropMode="flow_parent"
+                    android:padding="2dp"
+                    />
+
+
+
+            </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="2dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="投放量:"
+                android:layout_gravity="center_vertical"
+                />
+            <EditText
+                android:id="@+id/et_throwamount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:padding="5dp"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/edittext_bg"
+                android:hint="数量"/>
+            <Spinner
+                android:id="@+id/sp_amount"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_height="35dp"
+                >
+            </Spinner>
+
+
+        </LinearLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+    <LinearLayout
+        android:id="@+id/ll_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_price"
+        android:background="#fff"
+        android:layout_marginTop="20dp">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/imageicon"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上传图片"
+                />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_uploading"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:text="选择文件"
+            android:padding="5dp"
+            android:textSize="13sp"
+            android:textColor="#fff"
+            android:background="@drawable/btn_roundedbg"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"/>
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_image"
+        android:background="#fff"
+        android:layout_marginTop="20dp">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/timeicon"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="活动时间"
+                />
+        </LinearLayout>
+
+
+
+
+        <EditText
+            android:id="@+id/et_throwtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:padding="7dp"
+            android:background="@drawable/edittext_bg"
+            android:hint="当前时间"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"/>
+
+
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btn_submit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_time"
+        android:text="提交"
+        android:textSize="16sp"
+        android:padding="12dp"
+        android:textColor="#fff"
+        android:background="@drawable/btn_submint"
+        />
+
+
+
+    <Button
+        android:id="@+id/btn_throwlog"
+        android:layout_width="120dp"
+        android:layout_height="40dp"
+        android:text="投放日志"
+        android:padding="5dp"
+        android:textSize="18sp"
+        android:textColor="#fff"
+        android:background="@drawable/btn_rounded_blue"
+        android:layout_gravity="center_vertical"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"/>
+
+
+
+
+
+</RelativeLayout>

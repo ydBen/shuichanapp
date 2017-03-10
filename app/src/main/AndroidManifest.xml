@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.jit.shuichan">
+
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="21" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_OWNER_DATA" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+
+    <!-- zxing -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+
+    <!-- GCM requires a Google account. -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+
+    <!-- Creates a custom permission so only this app can receive its messages. NOTE: APP_PACKAGE.permission.C2D_MESSAGE -->
+    <!-- <permission -->
+    <!-- android:name="com.videogo.open.permission.C2D_MESSAGE" -->
+    <!-- android:protectionLevel="signature"/> -->
+    <!-- This app has permission to register and receive data message. -->
+    <!-- <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/> -->
+    <!-- Creates a custom permission so only this app can receive its messages. NOTE: APP_PACKAGE.permission.C2D_MESSAGE -->
+    <!-- <uses-permission android:name="com.videogo.open.permission.C2D_MESSAGE"/> -->
+
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:name=".EzvizApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/watericon"
+        android:label="水产专家"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.Light.NoTitleBar">
+        <activity
+            android:name=".SplashActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".LoginSelectActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"></activity>
+
+        <service android:name="com.ezviz.push.sdk.service.MQTTService" />
+
+        <activity
+            android:name="com.videogo.main.EzvizWebViewActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".remoteplayback.list.PlayBackListActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="nosensor" />
+        <activity
+            android:name=".ui.cameralist.EZCameraListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.realplay.EZRealPlayActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.message.EZMessageImageActivity2"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.message.EZMessageActivity2"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.remoteplayback.EZRemotePlayBackActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".devicemgt.EZDeviceSettingActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".devicemgt.ModifyDeviceNameActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".InterfaceDemoActivity"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".ui.androidpn.NotifierActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:launchMode="singleTask"
+            android:screenOrientation="unspecified"
+            android:theme="@android:style/Theme.Translucent" />
+        <activity
+            android:name=".scan.main.CaptureActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.devicelist.SeriesNumSearchActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".ui.devicelist.AutoWifiNetConfigActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.devicelist.AutoWifiConnectingActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.devicelist.AutoWifiDiscoveringActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.devicelist.DeviceDiscoverActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.devicelist.EZDevDiscActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.devicelist.AutoWifiPrepareStepOneActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.devicelist.AutoWifiResetActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.devicelist.ResetIntroduceActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.videogo.ui.discovery.SquareColumnActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.videogo.ui.discovery.SquareVideoListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.videogo.ui.discovery.SquareVideoListActivity2"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.videogo.ui.discovery.SearchVideoActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.videogo.ui.discovery.MyCollectActivity"
+            android:screenOrientation="portrait" />
+
+        <receiver
+            android:name=".EzvizBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.videogo.action.ADD_DEVICE_SUCCESS_ACTION" />
+                <action android:name="com.videogo.action.OAUTH_SUCCESS_ACTION" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="com.ezviz.push.sdk.android.intent.action.MESSAGE" />
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.ezviz.push.sdk.reciver.AndroidBootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <activity android:name=".test.InterfaceTestActivity"></activity>
+        <activity android:name=".test.InterfaceSelfTestActivity"></activity>
+        <activity
+            android:name=".devicemgt.EZUpgradeDeviceActivity"
+            android:label="@string/title_activity_ezupgrade_device"></activity>
+        <activity android:name=".ui.cameralist.EnvDetailActivity" />
+
+        <service android:name=".mina.MinaService" />
+
+        <activity android:name=".ui.diary.ShoppingActivity"/>
+        <activity android:name=".ui.diary.FeedingActivity"/>
+
+        <activity android:name="me.iwf.photopicker.PhotoPickerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
+
+        <activity android:name="me.iwf.photopicker.PhotoPagerActivity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"/>
+    </application>
+
+</manifest>
