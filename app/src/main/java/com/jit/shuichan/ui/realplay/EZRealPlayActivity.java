@@ -132,7 +132,11 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
     //mina的receiver
 //    private MessageBroadcastReceiver receiver;
 
-
+    //手指按下的点为(x1, y1)手指离开屏幕的点为(x2, y2)
+    float mPosX = 0;
+    float mPosY = 0;
+    float mCurPosX = 0;
+    float mCurPosY = 0;
 
     private static final String TAG = "RealPlayerActivity";
     /**
@@ -921,6 +925,70 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
             @Override
             public void onDrag(int direction, float distance, float rate) {
                 LogUtil.debugLog(TAG, "onDrag:" + direction);
+
+
+                switch (direction){
+                    case 0:    //左
+                        if (distance >20){
+                            setPtzDirectionIv(RealPlayStatus.PTZ_LEFT);
+                            ptzOption(EZPTZCommand.EZPTZCommandLeft, EZPTZAction.EZPTZActionSTART);
+
+                            new Handler().postDelayed(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    ptzOption(EZPTZCommand.EZPTZCommandLeft, EZPTZAction.EZPTZActionSTOP);
+                                }
+                            }, (long)(distance * 25));
+                        }
+                        break;
+                    case 1:    //右
+                        if (distance >20){
+                            setPtzDirectionIv(RealPlayStatus.PTZ_RIGHT);
+                            ptzOption(EZPTZCommand.EZPTZCommandRight, EZPTZAction.EZPTZActionSTART);
+
+                            new Handler().postDelayed(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    ptzOption(EZPTZCommand.EZPTZCommandRight, EZPTZAction.EZPTZActionSTOP);
+                                }
+                            }, (long)(distance * 25));
+                        }
+                        break;
+                    case 2:    //上
+                        if (distance >20){
+                            setPtzDirectionIv(RealPlayStatus.PTZ_UP);
+                            ptzOption(EZPTZCommand.EZPTZCommandUp, EZPTZAction.EZPTZActionSTART);
+
+                            new Handler().postDelayed(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    ptzOption(EZPTZCommand.EZPTZCommandUp, EZPTZAction.EZPTZActionSTOP);
+                                }
+                            }, (long)(distance * 25));
+                        }
+                        break;
+                    case 3:    //下
+                        if (distance >20){
+                            setPtzDirectionIv(RealPlayStatus.PTZ_DOWN);
+                            ptzOption(EZPTZCommand.EZPTZCommandDown, EZPTZAction.EZPTZActionSTART);
+
+                            new Handler().postDelayed(new Runnable() {
+
+                                @Override
+                                public void run() {
+                                    ptzOption(EZPTZCommand.EZPTZCommandDown, EZPTZAction.EZPTZActionSTOP);
+                                }
+                            }, (long)(distance * 25));
+                        }
+                        break;
+                }
+
+
+
+
                 if (mEZPlayer != null) {
                     //Utils.showLog(RealPlayActivity.this, "onDrag rate:" + rate);
                     startDrag(direction, distance, rate);
@@ -952,6 +1020,68 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
                     setPlayScaleUI(scale, oRect, curRect);
                 }
             }
+
+
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+//                    case MotionEvent.ACTION_DOWN:
+//                        //当手指按下的时候
+//                        mPosX = event.getX();
+//                        mPosY = event.getY();
+//
+////                        if(mPosY - mCurPosY > 100) {
+////                            Toast.makeText(getApplicationContext(), "上", Toast.LENGTH_SHORT).show();
+//////                            mPtzControlLy.setBackgroundResource(R.drawable.ptz_up_sel);
+////                            setPtzDirectionIv(RealPlayStatus.PTZ_UP);
+////                            ptzOption(EZPTZCommand.EZPTZCommandUp, EZPTZAction.EZPTZActionSTART);
+////                        } else if(mCurPosY - mPosY > 100) {
+////                            Toast.makeText(getApplicationContext(), "下", Toast.LENGTH_SHORT).show();
+//////                            mPtzControlLy.setBackgroundResource(R.drawable.ptz_bottom_sel);
+////                            setPtzDirectionIv(RealPlayStatus.PTZ_DOWN);
+////                            ptzOption(EZPTZCommand.EZPTZCommandDown, EZPTZAction.EZPTZActionSTART);
+////                            ptzOption(EZPTZCommand.EZPTZCommandDown, EZPTZAction.EZPTZActionSTART);
+////                        } else if(mPosX - mCurPosX > 100) {
+////                            Toast.makeText(getApplicationContext(), "左", Toast.LENGTH_SHORT).show();
+//////                            mPtzControlLy.setBackgroundResource(R.drawable.ptz_left_sel);
+////                            setPtzDirectionIv(RealPlayStatus.PTZ_LEFT);
+////                            ptzOption(EZPTZCommand.EZPTZCommandLeft, EZPTZAction.EZPTZActionSTART);
+////                            ptzOption(EZPTZCommand.EZPTZCommandLeft, EZPTZAction.EZPTZActionSTART);
+////                        } else if(mCurPosX - mPosX > 100) {
+////                            Toast.makeText(getApplicationContext(), "右", Toast.LENGTH_SHORT).show();
+//////                            mPtzControlLy.setBackgroundResource(R.drawable.ptz_right_sel);
+////                            setPtzDirectionIv(RealPlayStatus.PTZ_RIGHT);
+////                            ptzOption(EZPTZCommand.EZPTZCommandRight, EZPTZAction.EZPTZActionSTART);
+////                        }
+//
+//                        break;
+//                    case MotionEvent.ACTION_UP:
+//                        //当手指离开的时候
+//                        mCurPosX = event.getX();
+//                        mCurPosY = event.getY();
+//
+//
+//                        if(mPosY - mCurPosY > 100) {
+//                            Toast.makeText(getApplicationContext(), "上", Toast.LENGTH_SHORT).show();
+////                            ptzOption(EZPTZCommand.EZPTZCommandUp, EZPTZAction.EZPTZActionSTOP);
+//                        } else if(mCurPosY - mPosY > 100) {
+//                            Toast.makeText(getApplicationContext(), "下", Toast.LENGTH_SHORT).show();
+////                            ptzOption(EZPTZCommand.EZPTZCommandDown, EZPTZAction.EZPTZActionSTOP);
+//                        } else if(mPosX - mCurPosX > 100) {
+//                            Toast.makeText(getApplicationContext(), "左", Toast.LENGTH_SHORT).show();
+////                            ptzOption(EZPTZCommand.EZPTZCommandLeft, EZPTZAction.EZPTZActionSTOP);
+//                        } else if(mCurPosX - mPosX > 100) {
+//                            Toast.makeText(getApplicationContext(), "右", Toast.LENGTH_SHORT).show();
+////                            ptzOption(EZPTZCommand.EZPTZCommandRight, EZPTZAction.EZPTZActionSTOP);
+//                        }
+//                        break;
+//                    case MotionEvent.ACTION_POINTER_DOWN:
+//                        Toast.makeText(getApplicationContext(),"两只手指缩放",Toast.LENGTH_SHORT).show();
+//                        break;
+//                }
+//                return true;
+//            }
+
         };
         mRealPlaySv.setOnTouchListener(mRealPlayTouchListener);
 
@@ -1012,6 +1142,9 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
         mWaitDialog.setCancelable(false);
     }
 
+    private void ptzMovement() {
+    }
+
     public void startDrag(int direction, float distance, float rate) {
     }
 
@@ -1028,6 +1161,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
         boolean zoomIn = scale > 1.01 ? true : false;
         if (mZoomScale != 0 && preZoomIn != zoomIn) {
             LogUtil.debugLog(TAG, "startZoom stop:" + mZoomScale);
+            Log.e("缩放比例停止",String.valueOf(mZoomScale));
             //            mEZOpenSDK.controlPTZ(mZoomScale > 1.01 ? RealPlayStatus.PTZ_ZOOMIN
             //                    : RealPlayStatus.PTZ_ZOOMOUT, RealPlayStatus.PTZ_SPEED_DEFAULT, EZPlayer.PTZ_COMMAND_STOP);
             mZoomScale = 0;
@@ -1035,6 +1169,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
         if (scale != 0 && (mZoomScale == 0 || preZoomIn != zoomIn)) {
             mZoomScale = scale;
             LogUtil.debugLog(TAG, "startZoom start:" + mZoomScale);
+            Log.e("缩放比例开始",String.valueOf(mZoomScale));
             //            mEZOpenSDK.controlPTZ(mZoomScale > 1.01 ? RealPlayStatus.PTZ_ZOOMIN
             //                    : RealPlayStatus.PTZ_ZOOMOUT, RealPlayStatus.PTZ_SPEED_DEFAULT, EZPlayer.PTZ_COMMAND_START);
         }
@@ -1341,7 +1476,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
     }
 
     private void updateOperatorUI() {
-        if (mOrientation == Configuration.ORIENTATION_PORTRAIT) {
+        if (mOrientation == Configuration.ORIENTATION_PORTRAIT) {  // 正常状态
             // 显示状态栏
             fullScreen(false);
             updateOrientation();
@@ -1361,7 +1496,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
                     mRealPlayRecordStartBtn.setVisibility(View.GONE);
                 }
             }
-        } else {
+        } else {   // 全屏状态
             // 隐藏状态栏
             fullScreen(true);
             mPortraitTitleBar.setVisibility(View.GONE);
@@ -2376,8 +2511,8 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
             mLandscapeTitleBar.setVisibility(View.GONE);
         } else {
             if (!mIsOnTalk && !mIsOnPtz) {
-                //mj mRealPlayFullOperateBar.setVisibility(View.VISIBLE);
-                //                mFullscreenFullButton.setVisibility(View.VISIBLE);
+//                 mRealPlayFullOperateBar.setVisibility(View.VISIBLE);
+//                                mFullscreenFullButton.setVisibility(View.VISIBLE);
                 mLandscapeTitleBar.setVisibility(View.VISIBLE);
             }
             mControlDisplaySec = 0;
@@ -2592,7 +2727,7 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
 
         updateOrientation();
         setLoadingSuccess();
-        //        mRealPlayFlowTv.setVisibility(View.VISIBLE);
+//                mRealPlayFlowTv.setVisibility(View.VISIBLE);
         mRealPlayFullFlowLy.setVisibility(View.VISIBLE);
         mRealPlayBtn.setBackgroundResource(R.drawable.play_stop_selector);
 
@@ -3188,6 +3323,8 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
      * @since V1.0
      */
     private void handlePlaySuccess(Message msg) {
+
+
         mStatus = RealPlayStatus.STATUS_PLAY;
 
         // 声音处理
@@ -3221,6 +3358,8 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
             mRealPlayTalkBtn.setEnabled(false);
         }
     }
+
+
 
     private void setRealPlaySvLayout() {
         // 设置播放窗口位置
@@ -3461,8 +3600,9 @@ public class EZRealPlayActivity extends Activity implements OnClickListener, Sur
             mRealPlayRatioTv.setLayoutParams(realPlayRatioTvLp);
             String sacleStr = String.valueOf(scale);
             mRealPlayRatioTv.setText(sacleStr.subSequence(0, Math.min(3, sacleStr.length())) + "X");
+            Log.e("缩放尺寸",sacleStr);
             //mj mRealPlayRatioTv.setVisibility(View.VISIBLE);
-            mRealPlayRatioTv.setVisibility(View.GONE);
+            mRealPlayRatioTv.setVisibility(View.VISIBLE);
             hideControlRlAndFullOperateBar(false);
             try {
                 if (mEZPlayer != null) {

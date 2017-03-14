@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jit.shuichan.R;
@@ -67,7 +68,7 @@ public class ShoppingActivity extends Activity implements View.OnClickListener{
     private EditText productName;
     private EditText productAmount;
     private EditText productPrice;
-    private EditText productTime;
+    private TextView productTime;
 
 
     /**
@@ -271,7 +272,7 @@ public class ShoppingActivity extends Activity implements View.OnClickListener{
         productName = (EditText) findViewById(R.id.et_productname);
         productAmount = (EditText) findViewById(R.id.et_productamount);
         productPrice = (EditText) findViewById(R.id.et_productprice);
-        productTime = (EditText) findViewById(R.id.et_currenttime);
+        productTime = (TextView) findViewById(R.id.et_currenttime);
         productTime.setText(getCurrentTime());
         Button submitBtn = (Button) findViewById(R.id.btn_submit);
         Button uploadImgBtn = (Button) findViewById(R.id.btn_uploadimg);

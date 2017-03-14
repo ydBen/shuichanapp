@@ -74,7 +74,7 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
     private DropEditText drop;
 
     private EditText throwAmount;
-    private EditText throwTime;
+    private TextView throwTime;
 
     private ArrayList<String> inputType;
     private ArrayList<String> inputTypeName;
@@ -220,7 +220,7 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
         //斤or车
         spAmount = (Spinner) findViewById(R.id.sp_amount);
         throwAmount = (EditText) findViewById(R.id.et_throwamount);
-        throwTime = (EditText) findViewById(R.id.et_throwtime);
+        throwTime = (TextView) findViewById(R.id.et_throwtime);
         throwTime.setText(getCurrentTime());
 
         Button submitBtn = (Button) findViewById(R.id.btn_submit);
