@@ -146,4 +146,22 @@ public class EzvizApplication extends Application {
     public static int getMainThreadId() {
         return mainThreadId;
     }
+
+    public static boolean isRunOnUIThread(){
+        int myTid = android.os.Process.myTid();
+        if (myTid == getMainThreadId()){
+            return true;
+        }
+        return false;
+    }
+
+    // 运行在主线程
+    public static void runOnUIThread(Runnable r){
+        if (isRunOnUIThread()){
+            r.run();
+        }else {
+            getHandler().post(r);
+        }
+
+    }
 }

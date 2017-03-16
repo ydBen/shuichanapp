@@ -42,7 +42,7 @@ import java.util.Map;
 public class NetUtils {
 
     //172.19.73.103
-    public static final String Url = "http://210.28.188.98:8080/IntelligentAgriculture/";
+    public static final String Url = "http://172.19.73.103:8080/IntelligentAgriculture/";
     public static String JSESSIONID;
     private static HttpParams httpParams;
     private static DefaultHttpClient httpClient;
@@ -93,19 +93,19 @@ public class NetUtils {
     public static ArrayList<BasicNameValuePair> measureSubmitValues = new ArrayList<BasicNameValuePair>();
 
     // 日志 日常采购
-    public static final String buyLogURL = Url + "system/index_log?page=${buy_currentPage-1}&kind=buy";
+    public static final String buyLogURL = Url + "system/showMyLogForAndroid";
     public static ArrayList<BasicNameValuePair> buyLogValues = new ArrayList<BasicNameValuePair>();
 
     // 日志 日常投放
-    public static final String throwLogURL = Url + "system/index_log?page=${buy_currentPage-1}&kind=throw";
+    public static final String throwLogURL = Url + "system/index_log";
     public static ArrayList<BasicNameValuePair> throwLogValues = new ArrayList<BasicNameValuePair>();
 
     // 日志 巡视检查
-    public static final String patrolLogURL = Url + "system/index_log?page=${buy_currentPage-1}&kind=patro";
+    public static final String patrolLogURL = Url + "system/index_log";
     public static ArrayList<BasicNameValuePair> patrolLogValues = new ArrayList<BasicNameValuePair>();
 
     // 日志 措施
-    public static final String measureLogURL = Url + "system/index_log?page=${buy_currentPage-1}&kind=measure";
+    public static final String measureLogURL = Url + "system/index_log";
     public static ArrayList<BasicNameValuePair> measureLogValues = new ArrayList<BasicNameValuePair>();
 
     // 溏口 投放成本
@@ -420,6 +420,14 @@ public class NetUtils {
 
 
 
+        return s;
+    }
+
+
+    public static String getBuyLogRequest(){
+        buyLogValues.add(new BasicNameValuePair("page","0"));
+        buyLogValues.add(new BasicNameValuePair("kind","buy"));
+        String s = postRequest(buyLogURL,buyLogValues);
         return s;
     }
 
