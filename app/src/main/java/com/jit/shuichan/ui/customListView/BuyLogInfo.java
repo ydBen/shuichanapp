@@ -9,6 +9,7 @@ public class BuyLogInfo {
     public String logType;
     public String logName;
     public String logAmount;
+    public String logUnit;
     public String logPrice;
     public String logSum;
     public String logImage;

@@ -4,7 +4,9 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.os.Environment;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.jit.shuichan.EzvizApplication;
 import com.lidroid.xutils.http.client.multipart.MultipartEntity;
 
 import org.apache.http.HttpResponse;
@@ -42,7 +44,7 @@ import java.util.Map;
 public class NetUtils {
 
     //172.19.73.103
-    public static final String Url = "http://172.19.73.103:8080/IntelligentAgriculture/";
+    public static final String Url = "http://218.94.144.228:8088/IntelligentAgriculture/";
     public static String JSESSIONID;
     private static HttpParams httpParams;
     private static DefaultHttpClient httpClient;
@@ -92,21 +94,21 @@ public class NetUtils {
     public static final String measureSubmitURL = Url + "emergMeasureManage/emergMeasure?page=1&kind=measure";
     public static ArrayList<BasicNameValuePair> measureSubmitValues = new ArrayList<BasicNameValuePair>();
 
-    // 日志 日常采购
+    // 日志 日常采购      获取日志 相关数据
     public static final String buyLogURL = Url + "system/showMyLogForAndroid";
     public static ArrayList<BasicNameValuePair> buyLogValues = new ArrayList<BasicNameValuePair>();
 
-    // 日志 日常投放
-    public static final String throwLogURL = Url + "system/index_log";
-    public static ArrayList<BasicNameValuePair> throwLogValues = new ArrayList<BasicNameValuePair>();
-
-    // 日志 巡视检查
-    public static final String patrolLogURL = Url + "system/index_log";
-    public static ArrayList<BasicNameValuePair> patrolLogValues = new ArrayList<BasicNameValuePair>();
-
-    // 日志 措施
-    public static final String measureLogURL = Url + "system/index_log";
-    public static ArrayList<BasicNameValuePair> measureLogValues = new ArrayList<BasicNameValuePair>();
+//    // 日志 日常投放
+//    public static final String throwLogURL = Url + "system/index_log";
+//    public static ArrayList<BasicNameValuePair> throwLogValues = new ArrayList<BasicNameValuePair>();
+//
+//    // 日志 巡视检查
+//    public static final String patrolLogURL = Url + "system/index_log";
+//    public static ArrayList<BasicNameValuePair> patrolLogValues = new ArrayList<BasicNameValuePair>();
+//
+//    // 日志 措施
+//    public static final String measureLogURL = Url + "system/index_log";
+//    public static ArrayList<BasicNameValuePair> measureLogValues = new ArrayList<BasicNameValuePair>();
 
     // 溏口 投放成本
     public static final String costURL = Url + "cost/dailyInputData";
@@ -301,6 +303,12 @@ public class NetUtils {
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("POST异常",e.toString());
+            EzvizApplication.runOnUIThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(EzvizApplication.getContext(),"网络异常",Toast.LENGTH_LONG).show();
+                }
+            });
         }
 
         return null;
@@ -377,6 +385,12 @@ public class NetUtils {
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("POST异常",e.toString());
+            EzvizApplication.runOnUIThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(EzvizApplication.getContext(),"网络异常",Toast.LENGTH_LONG).show();
+                }
+            });
         }
 
         return null;
@@ -414,7 +428,7 @@ public class NetUtils {
 
     public static String loginRequest(){
         loginValues.add(new BasicNameValuePair("power","0"));
-        loginValues.add(new BasicNameValuePair("userName","zhangsan"));
+        loginValues.add(new BasicNameValuePair("userName","zhangsir"));
         loginValues.add(new BasicNameValuePair("password","12121212"));
         String s = postRequest(loginURL, loginValues);
 

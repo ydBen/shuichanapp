@@ -41,11 +41,11 @@
     </RelativeLayout>
 
 
-    <ListView
-        android:layout_below="@+id/title"
+    <com.jit.shuichan.widget.pulltorefresh.PullToRefreshListView
         android:id="@+id/lv_log"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_below="@+id/title"
         android:cacheColorHint="@color/transparent"
         android:divider="@color/transparent"
         android:drawingCacheQuality="high"

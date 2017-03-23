@@ -443,6 +443,7 @@ public class EZCameraListActivity extends Activity implements OnClickListener,Se
 
             @Override
             public void onRefresh(PullToRefreshBase<ListView> refreshView, boolean headerOrFooter) {
+                Log.e("refreshing","refreshing");
                 getCameraInfoList(headerOrFooter);
             }
         });
@@ -475,7 +476,7 @@ public class EZCameraListActivity extends Activity implements OnClickListener,Se
 
         // 养殖日志 数据
         mTitleStrs = new String[]{
-            "日常采购","日常投放","巡视检查","应急措施"
+            "日常采购","日常投放","巡视检查","生产措施"
         };
         mDetailStrs = new String[]{
             "饲养必需品购买","饲料投放情况","轻松记录异常","积累丰富经验"
@@ -502,7 +503,7 @@ public class EZCameraListActivity extends Activity implements OnClickListener,Se
                     case 2:// 巡视检查
                         Log.e("gv","点击item2");
                         break;
-                    case 3:// 应急措施
+                    case 3:// 生产措施
                         Log.e("gv","点击item3");
                         break;
                 }
@@ -617,7 +618,7 @@ public class EZCameraListActivity extends Activity implements OnClickListener,Se
                         result = EzvizApplication.getOpenSDK().getSharedDeviceList((mAdapter.getCount() / 20) + 1, 20);
                     }
                 }
-
+                Log.e("摄像头数量不为0",String.valueOf(result.size()));
                 return result;
 
             } catch (BaseException e) {
@@ -642,7 +643,9 @@ public class EZCameraListActivity extends Activity implements OnClickListener,Se
                     CharSequence dateText = DateFormat.format("yyyy-MM-dd kk:mm:ss", new Date());
                     for (LoadingLayout layout : mListView.getLoadingLayoutProxy(true, false).getLayouts()) {
                         ((PullToRefreshHeader) layout).setLastRefreshTime(":" + dateText);
+                        Log.e("刷新摄像头","刷新摄像头");
                     }
+
                     mAdapter.clearItem();
                 }
                 if (mAdapter.getCount() == 0 && result.size() == 0) {

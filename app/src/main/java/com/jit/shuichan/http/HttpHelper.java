@@ -20,7 +20,7 @@ import java.io.InputStream;
 
 public class HttpHelper {
 
-	public static final String URL = "http://210.28.188.98:8080/IntelligentAgriculture/";
+	public static final String URL = "//218.94.144.228:8088/IntelligentAgriculture/";
 
 	/** get请求，获取返回字符串内容 */
 	public static HttpResult get(String url) {

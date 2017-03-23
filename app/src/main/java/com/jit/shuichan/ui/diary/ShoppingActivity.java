@@ -31,7 +31,6 @@ import java.util.ArrayList;
 
 import me.iwf.photopicker.PhotoPicker;
 
-import static com.jit.shuichan.http.NetUtils.buyLogURL;
 import static com.jit.shuichan.http.NetUtils.buySubmitURL;
 import static com.jit.shuichan.http.NetUtils.getBuyTypeRequest;
 import static com.jit.shuichan.http.NetUtils.getCurrentTime;
@@ -300,34 +299,14 @@ public class ShoppingActivity extends Activity implements View.OnClickListener{
                 PhotoPicker.builder().setPhotoCount(1).setShowCamera(true).setPreviewEnabled(false).start(ShoppingActivity.this,PhotoPicker.REQUEST_CODE);
                 break;
             case R.id.btn_buylog:
-                Toast.makeText(getApplicationContext(),"采购日志",Toast.LENGTH_SHORT).show();
                 openLogPage();
                 break;
         }
     }
 
     private void openLogPage() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                //获取日志测试
-                MultipartEntity multipartEntity = new MultipartEntity();
-                try {
-                    multipartEntity.addPart("page", new StringBody("1", Charset.forName("UTF-8")));
-                    multipartEntity.addPart("kind", new StringBody("buy", Charset.forName("UTF-8")));
-                    multipartEntity.addPart("userId", new StringBody("2", Charset.forName("UTF-8")));
-
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-                String buyThingRequest = postImage(buyLogURL, multipartEntity);
-                Log.e("采购日志:",buyThingRequest);
-
-
-
-            }
-        }).start();
+        Intent intent = new Intent(ShoppingActivity.this, LogActivity.class);
+        startActivity(intent);
     }
 
 

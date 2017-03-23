@@ -255,8 +255,9 @@ public class SplashActivity extends Activity {
                 Message msg = Message.obtain();
                 long startTime = System.currentTimeMillis();
                 try {
+                    //210.28.188.98
                     //1,封装url地址
-                    URL url = new URL("http://210.28.188.98:8080/shuichanupdate.json");
+                    URL url = new URL("http://218.94.144.228:8088/shuichanupdate.json");
                     //2,开启一个链接
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     //3,设置常见请求参数(请求头)
