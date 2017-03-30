@@ -44,7 +44,7 @@ import java.util.Map;
 public class NetUtils {
 
     //172.19.73.103
-    public static final String Url = "http://218.94.144.228:8088/IntelligentAgriculture/";
+    public static final String Url = "http://210.28.188.98:8088/IntelligentAgriculture/";
     public static String JSESSIONID;
     private static HttpParams httpParams;
     private static DefaultHttpClient httpClient;
@@ -145,6 +145,19 @@ public class NetUtils {
     // 指定水域  或 所有水域  历史数据
     public static final String historyURL = Url + "history/allhistoryData";
     public static ArrayList<BasicNameValuePair> historyValues = new ArrayList<BasicNameValuePair>();
+
+
+    // 历史数据 查询
+    public static final String searchURL = Url + "src/com/software/controller/dataDisplay/historydata";
+    public static ArrayList<BasicNameValuePair> searchValues = new ArrayList<BasicNameValuePair>();
+
+
+    // 图片获取
+    public static final String downloadImgURL = Url + "patrolManage/loadImages";
+    public static ArrayList<BasicNameValuePair> downloadImgValues = new ArrayList<BasicNameValuePair>();
+
+
+
 
 
 
@@ -278,8 +291,8 @@ public class NetUtils {
             int statueCode = response.getStatusLine().getStatusCode();
 
             if (statueCode == 200) {
-                System.out.println(statueCode);
-
+//                System.out.println(statueCode);
+                Log.e("历史数据","历史数据请求成功");
                 /* 获取cookieStore */
                 CookieStore cookieStore = httpClient.getCookieStore();
                 List<Cookie> cookies = cookieStore.getCookies();
@@ -463,6 +476,28 @@ public class NetUtils {
         return s;
     }
 
+
+    public static String getSearchRequest(String companyId,String factoryId,String sensorId,String dataType,String startDate,String endDate,String startTime,String endTime){
+//        String currentTime = getCurrentTime();
+
+        searchValues.add(new BasicNameValuePair("comid",companyId));
+        searchValues.add(new BasicNameValuePair("facid",factoryId));
+        searchValues.add(new BasicNameValuePair("senid",sensorId));
+        searchValues.add(new BasicNameValuePair("type",dataType));
+        searchValues.add(new BasicNameValuePair("startDate",startDate));
+        searchValues.add(new BasicNameValuePair("endDate",endDate));
+        searchValues.add(new BasicNameValuePair("startTime",startTime));
+        searchValues.add(new BasicNameValuePair("endTime",endTime));
+        String s = postRequest(searchURL, searchValues);
+        return s;
+    }
+
+    public static String downloadImage(String imageS){
+        downloadImgValues.add(new BasicNameValuePair("names",imageS));
+        String s = postRequest(downloadImgURL, downloadImgValues);
+        return s;
+    }
+
     public static String getBuyThingRequest(String throwType){
 
 
@@ -482,6 +517,23 @@ public class NetUtils {
         Date curDate =  new Date(System.currentTimeMillis());
 //获取当前时间
         String   str   =   formatter.format(curDate);
+
+        return str;
+    }
+
+
+    public static String getTime(Date  sData) {
+        //"yyyy年MM月dd日   HH:mm:ss"
+        SimpleDateFormat formatter   =   new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        String   str   =   formatter.format(sData);
+
+        return str;
+    }
+
+    public static String getMiaoTime(Date  sData) {
+        //"yyyy年MM月dd日   HH:mm:ss"
+        SimpleDateFormat formatter   =   new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String   str   =   formatter.format(sData);
 
         return str;
     }

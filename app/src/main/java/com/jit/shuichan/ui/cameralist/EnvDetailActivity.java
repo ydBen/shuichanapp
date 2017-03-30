@@ -1,6 +1,8 @@
 package com.jit.shuichan.ui.cameralist;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -46,6 +48,8 @@ public class EnvDetailActivity extends Activity {
     private int mFactoryId;
     private String mMessage = null;
     private String mUser;
+    private boolean mIsOpen;
+    private String mOpenOrNotStr;
 
 
     @Override
@@ -69,6 +73,14 @@ public class EnvDetailActivity extends Activity {
         startService(intent);
 
         initView();
+        initData();
+    }
+
+    private void initData() {
+        getHistoryFromServer();
+    }
+
+    private void getHistoryFromServer() {
     }
 
     private void initView() {
@@ -78,6 +90,8 @@ public class EnvDetailActivity extends Activity {
         mSwitch = (Switch)findViewById(R.id.switch_button);
         mSwitch1 = (Switch)findViewById(R.id.switch_button1);
         mTV_Title = (TextView) findViewById(R.id.area_title_Tv);
+
+
 
 
 
@@ -116,61 +130,27 @@ public class EnvDetailActivity extends Activity {
 
                     if (mFactoryId == 1){
                         if (mSwitch.isChecked()){//开
-                            Log.e("tag","点击事件点开");
-                            Gson gson = new Gson();
-                            EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,1,null,"control#1#1#1"));
-                            Log.e("TestJson",gson.toJson(env));
-                            String msg = gson.toJson(env).toString();
-                            SessionManager.getInstance().writeToServer(msg);
+//                            Log.e("tag","点击事件点开");
 
-                            //自定义定时器
-                            final Handler handler = new Handler();
-                            Runnable runnable = new Runnable() {
-                                @Override
-                                public void run() {
-                                    //要做的事情
-                                    if (mMessage.equals(null)){
-                                        Toast.makeText(getApplicationContext(),"控制失败",Toast.LENGTH_SHORT).show();
-                                    }
-                                    handler.postDelayed(this, 2000);
-                                }
-                            };
+                            mIsOpen = true;
+                            mOpenOrNotStr = "1";
+                            showSwitch1Dialog(mIsOpen,mFactoryId,mOpenOrNotStr);
                         }else {//关
-                            Log.e("tag","点击事件点关");
-                            Gson gson = new Gson();
-                            EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,1,null,"control#1#1#0"));
-                            Log.e("TestJson",gson.toJson(env));
-                            String msg = gson.toJson(env).toString();
-                            SessionManager.getInstance().writeToServer(msg);
+                            mIsOpen = false;
+                            mOpenOrNotStr = "0";
+                            showSwitch1Dialog(mIsOpen,mFactoryId,mOpenOrNotStr);
                         }
                     }else {
                         if (mSwitch.isChecked()){//开
                             Log.e("tag","点击事件点开");
-                            Gson gson = new Gson();
-                            EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,mFactoryId-1,null,"control#1#1#1"));
-                            Log.e("TestJson",gson.toJson(env));
-                            String msg = gson.toJson(env).toString();
-                            SessionManager.getInstance().writeToServer(msg);
-
-                            //自定义定时器
-                            final Handler handler = new Handler();
-                            Runnable runnable = new Runnable() {
-                                @Override
-                                public void run() {
-                                    //要做的事情
-                                    if (mMessage.equals(null)){
-                                        Toast.makeText(getApplicationContext(),"控制失败",Toast.LENGTH_SHORT).show();
-                                    }
-                                    handler.postDelayed(this, 2000);
-                                }
-                            };
+                            mIsOpen = true;
+                            mOpenOrNotStr = "1";
+                            showSwitch1Dialog(mIsOpen,mFactoryId - 1,mOpenOrNotStr);
                         }else {//关
                             Log.e("tag","点击事件点关");
-                            Gson gson = new Gson();
-                            EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,mFactoryId-1,null,"control#1#1#0"));
-                            Log.e("TestJson",gson.toJson(env));
-                            String msg = gson.toJson(env).toString();
-                            SessionManager.getInstance().writeToServer(msg);
+                            mIsOpen = false;
+                            mOpenOrNotStr = "0";
+                            showSwitch1Dialog(mIsOpen,mFactoryId - 1,mOpenOrNotStr);
                         }
 
                     }
@@ -178,89 +158,38 @@ public class EnvDetailActivity extends Activity {
                 }else if (mUser.equals("渔网1")){
                     if (mSwitch.isChecked()){//开
                         Log.e("tag","点击事件点开");
-                        Gson gson = new Gson();
-                        EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,2,null,"control#1#1#1"));
-                        Log.e("TestJson",gson.toJson(env));
-                        String msg = gson.toJson(env).toString();
-                        SessionManager.getInstance().writeToServer(msg);
-
-                        //自定义定时器
-                        final Handler handler = new Handler();
-                        Runnable runnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                //要做的事情
-                                if (mMessage.equals(null)){
-                                    Toast.makeText(getApplicationContext(),"控制失败",Toast.LENGTH_SHORT).show();
-                                }
-                                handler.postDelayed(this, 2000);
-                            }
-                        };
+                        mIsOpen = true;
+                        mOpenOrNotStr = "1";
+                        showSwitch1Dialog(mIsOpen,2,mOpenOrNotStr);
                     }else {//关
                         Log.e("tag","点击事件点关");
-                        Gson gson = new Gson();
-                        EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,2,null,"control#1#1#0"));
-                        Log.e("TestJson",gson.toJson(env));
-                        String msg = gson.toJson(env).toString();
-                        SessionManager.getInstance().writeToServer(msg);
+                        mIsOpen = false;
+                        mOpenOrNotStr = "0";
+                        showSwitch1Dialog(mIsOpen,2,mOpenOrNotStr);
                     }
                 }else if (mUser.equals("渔网2")){
                     if (mSwitch.isChecked()){//开
                         Log.e("tag","点击事件点开");
-                        Gson gson = new Gson();
-                        EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,3,null,"control#1#1#1"));
-                        Log.e("TestJson",gson.toJson(env));
-                        String msg = gson.toJson(env).toString();
-                        SessionManager.getInstance().writeToServer(msg);
-
-                        //自定义定时器
-                        final Handler handler = new Handler();
-                        Runnable runnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                //要做的事情
-                                if (mMessage.equals(null)){
-                                    Toast.makeText(getApplicationContext(),"控制失败",Toast.LENGTH_SHORT).show();
-                                }
-                                handler.postDelayed(this, 2000);
-                            }
-                        };
+                        mIsOpen = true;
+                        mOpenOrNotStr = "1";
+                        showSwitch1Dialog(mIsOpen,3,mOpenOrNotStr);
                     }else {//关
                         Log.e("tag","点击事件点关");
-                        Gson gson = new Gson();
-                        EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,3,null,"control#1#1#0"));
-                        Log.e("TestJson",gson.toJson(env));
-                        String msg = gson.toJson(env).toString();
-                        SessionManager.getInstance().writeToServer(msg);
+                        mIsOpen = false;
+                        mOpenOrNotStr = "0";
+                        showSwitch1Dialog(mIsOpen,3,mOpenOrNotStr);
                     }
                 }else if (mUser.equals("渔网3")){
                     if (mSwitch.isChecked()){//开
                         Log.e("tag","点击事件点开");
-                        Gson gson = new Gson();
-                        EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,4,null,"control#1#1#1"));
-                        Log.e("TestJson",gson.toJson(env));
-                        String msg = gson.toJson(env).toString();
-                        SessionManager.getInstance().writeToServer(msg);
-
-                        //自定义定时器
-                        final Handler handler = new Handler();
-                        Runnable runnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                //要做的事情
-                                if (mMessage.equals(null)){
-                                    Toast.makeText(getApplicationContext(),"控制失败",Toast.LENGTH_SHORT).show();
-                                }
-                                handler.postDelayed(this, 2000);
-                            }
-                        };
+                        mIsOpen = true;
+                        mOpenOrNotStr = "1";
+                        showSwitch1Dialog(mIsOpen,4,mOpenOrNotStr);
                     }else {//关
                         Log.e("tag","点击事件点关");
-                        Gson gson = new Gson();
-                        EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,4,null,"control#1#1#0"));
-                        Log.e("TestJson",gson.toJson(env));
-                        String msg = gson.toJson(env).toString();
-                        SessionManager.getInstance().writeToServer(msg);
+                        mIsOpen = false;
+                        mOpenOrNotStr = "0";
+                        showSwitch1Dialog(mIsOpen,4,mOpenOrNotStr);
                     }
                 }
 
@@ -277,150 +206,66 @@ public class EnvDetailActivity extends Activity {
 
                     if (mFactoryId == 1){
                         if (mSwitch1.isChecked()){//开
-                            Log.e("tag","点击事件点开");
-                            Gson gson = new Gson();
-                            EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,1,null,"control#1#2#1"));
-                            Log.e("TestJson",gson.toJson(env));
-                            String msg = gson.toJson(env).toString();
-                            SessionManager.getInstance().writeToServer(msg);
+//                            Log.e("tag","点击事件点开");
 
-                            //自定义定时器
-                            final Handler handler = new Handler();
-                            Runnable runnable = new Runnable() {
-                                @Override
-                                public void run() {
-                                    //要做的事情
-                                    if (mMessage.equals(null)){
-                                        Toast.makeText(getApplicationContext(),"控制失败",Toast.LENGTH_SHORT).show();
-                                    }
-                                    handler.postDelayed(this, 2000);
-                                }
-                            };
+                            mIsOpen = true;
+                            mOpenOrNotStr = "1";
+                            showSwitch2Dialog(mIsOpen,mFactoryId,mOpenOrNotStr);
                         }else {//关
-                            Log.e("tag","点击事件点关");
-                            Gson gson = new Gson();
-                            EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,1,null,"control#1#2#0"));
-                            Log.e("TestJson",gson.toJson(env));
-                            String msg = gson.toJson(env).toString();
-                            SessionManager.getInstance().writeToServer(msg);
+                            mIsOpen = false;
+                            mOpenOrNotStr = "0";
+                            showSwitch2Dialog(mIsOpen,mFactoryId,mOpenOrNotStr);
                         }
                     }else {
                         if (mSwitch1.isChecked()){//开
                             Log.e("tag","点击事件点开");
-                            Gson gson = new Gson();
-                            EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,mFactoryId-1,null,"control#1#2#1"));
-                            Log.e("TestJson",gson.toJson(env));
-                            String msg = gson.toJson(env).toString();
-                            SessionManager.getInstance().writeToServer(msg);
-
-                            //自定义定时器
-                            final Handler handler = new Handler();
-                            Runnable runnable = new Runnable() {
-                                @Override
-                                public void run() {
-                                    //要做的事情
-                                    if (mMessage.equals(null)){
-                                        Toast.makeText(getApplicationContext(),"控制失败",Toast.LENGTH_SHORT).show();
-                                    }
-                                    handler.postDelayed(this, 2000);
-                                }
-                            };
+                            mIsOpen = true;
+                            mOpenOrNotStr = "1";
+                            showSwitch2Dialog(mIsOpen,mFactoryId - 1,mOpenOrNotStr);
                         }else {//关
                             Log.e("tag","点击事件点关");
-                            Gson gson = new Gson();
-                            EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,mFactoryId-1,null,"control#1#2#0"));
-                            Log.e("TestJson",gson.toJson(env));
-                            String msg = gson.toJson(env).toString();
-                            SessionManager.getInstance().writeToServer(msg);
+                            mIsOpen = false;
+                            mOpenOrNotStr = "0";
+                            showSwitch2Dialog(mIsOpen,mFactoryId - 1,mOpenOrNotStr);
                         }
+
                     }
 
                 }else if (mUser.equals("渔网1")){
                     if (mSwitch1.isChecked()){//开
                         Log.e("tag","点击事件点开");
-                        Gson gson = new Gson();
-                        EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,2,null,"control#1#2#1"));
-                        Log.e("TestJson",gson.toJson(env));
-                        String msg = gson.toJson(env).toString();
-                        SessionManager.getInstance().writeToServer(msg);
-
-                        //自定义定时器
-                        final Handler handler = new Handler();
-                        Runnable runnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                //要做的事情
-                                if (mMessage.equals(null)){
-                                    Toast.makeText(getApplicationContext(),"控制失败",Toast.LENGTH_SHORT).show();
-                                }
-                                handler.postDelayed(this, 2000);
-                            }
-                        };
+                        mIsOpen = true;
+                        mOpenOrNotStr = "1";
+                        showSwitch2Dialog(mIsOpen,2,mOpenOrNotStr);
                     }else {//关
                         Log.e("tag","点击事件点关");
-                        Gson gson = new Gson();
-                        EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,2,null,"control#1#2#0"));
-                        Log.e("TestJson",gson.toJson(env));
-                        String msg = gson.toJson(env).toString();
-                        SessionManager.getInstance().writeToServer(msg);
+                        mIsOpen = false;
+                        mOpenOrNotStr = "0";
+                        showSwitch2Dialog(mIsOpen,2,mOpenOrNotStr);
                     }
                 }else if (mUser.equals("渔网2")){
                     if (mSwitch1.isChecked()){//开
                         Log.e("tag","点击事件点开");
-                        Gson gson = new Gson();
-                        EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,3,null,"control#1#2#1"));
-                        Log.e("TestJson",gson.toJson(env));
-                        String msg = gson.toJson(env).toString();
-                        SessionManager.getInstance().writeToServer(msg);
-
-                        //自定义定时器
-                        final Handler handler = new Handler();
-                        Runnable runnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                //要做的事情
-                                if (mMessage.equals(null)){
-                                    Toast.makeText(getApplicationContext(),"控制失败",Toast.LENGTH_SHORT).show();
-                                }
-                                handler.postDelayed(this, 2000);
-                            }
-                        };
+                        mIsOpen = true;
+                        mOpenOrNotStr = "1";
+                        showSwitch2Dialog(mIsOpen,3,mOpenOrNotStr);
                     }else {//关
                         Log.e("tag","点击事件点关");
-                        Gson gson = new Gson();
-                        EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,3,null,"control#1#2#0"));
-                        Log.e("TestJson",gson.toJson(env));
-                        String msg = gson.toJson(env).toString();
-                        SessionManager.getInstance().writeToServer(msg);
+                        mIsOpen = false;
+                        mOpenOrNotStr = "0";
+                        showSwitch2Dialog(mIsOpen,3,mOpenOrNotStr);
                     }
                 }else if (mUser.equals("渔网3")){
                     if (mSwitch1.isChecked()){//开
                         Log.e("tag","点击事件点开");
-                        Gson gson = new Gson();
-                        EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,4,null,"control#1#2#1"));
-                        Log.e("TestJson",gson.toJson(env));
-                        String msg = gson.toJson(env).toString();
-                        SessionManager.getInstance().writeToServer(msg);
-
-                        //自定义定时器
-                        final Handler handler = new Handler();
-                        Runnable runnable = new Runnable() {
-                            @Override
-                            public void run() {
-                                //要做的事情
-                                if (mMessage.equals(null)){
-                                    Toast.makeText(getApplicationContext(),"控制失败",Toast.LENGTH_SHORT).show();
-                                }
-                                handler.postDelayed(this, 2000);
-                            }
-                        };
+                        mIsOpen = true;
+                        mOpenOrNotStr = "1";
+                        showSwitch2Dialog(mIsOpen,4,mOpenOrNotStr);
                     }else {//关
                         Log.e("tag","点击事件点关");
-                        Gson gson = new Gson();
-                        EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,4,null,"control#1#2#0"));
-                        Log.e("TestJson",gson.toJson(env));
-                        String msg = gson.toJson(env).toString();
-                        SessionManager.getInstance().writeToServer(msg);
+                        mIsOpen = false;
+                        mOpenOrNotStr = "0";
+                        showSwitch2Dialog(mIsOpen,4,mOpenOrNotStr);
                     }
                 }
 
@@ -433,15 +278,6 @@ public class EnvDetailActivity extends Activity {
             @Override
             public void onClick(View view) {
                 finish();
-            }
-        });
-
-
-        Button historyButton = (Button) findViewById(R.id.historybtn);
-        historyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"功能待更新",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -463,7 +299,7 @@ public class EnvDetailActivity extends Activity {
                     Log.e("tag","来到了溏口5");
                     //查询传感器参数
                     Gson gson = new Gson();
-                    EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,1,null,"query#all"));
+                    EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,mFactoryId,null,"query#all"));
                     Log.e("TestJson",gson.toJson(env));
                     String msg = gson.toJson(env).toString();
                     SessionManager.getInstance().writeToServer(msg);
@@ -474,7 +310,7 @@ public class EnvDetailActivity extends Activity {
                         e.printStackTrace();
                     }
                     //查询设备状态
-                    EnvData con = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,1,null,"status"));
+                    EnvData con = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,mFactoryId,null,"status"));
                     Log.e("TestJson",gson.toJson(con));
                     String control = gson.toJson(con).toString();
                     SessionManager.getInstance().writeToServer(control);
@@ -718,8 +554,133 @@ public class EnvDetailActivity extends Activity {
     }
 
 
-//    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-//    public void parseFactoryId(FactoryIdEvent event){
-//        Log.e("TAG","获取工厂参数:" + event.factoryId);
-//    }
+    /**
+     * 弹出对话框,提示用户更新
+     */
+    protected void showSwitch1Dialog(final boolean isOpen, final int factory, final String openOrNot) {
+        //对话框,是依赖于activity存在的
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //设置左上角图标
+        builder.setIcon(R.drawable.ic_launcher);
+        builder.setTitle("提示！！！");
+        //设置描述内容
+        if (isOpen){
+            builder.setMessage("即将打开水车");
+        }else {
+            builder.setMessage("即将关闭水车");
+        }
+
+
+        //积极按钮,立即更新
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //下载apk,apk链接地址,downloadUrl
+                Gson gson = new Gson();
+                EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,factory,null,"control#1#1#" + openOrNot));
+                Log.e("TestJson",gson.toJson(env));
+                String msg = gson.toJson(env).toString();
+                SessionManager.getInstance().writeToServer(msg);
+
+                //自定义定时器
+                final Handler handler = new Handler();
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        //要做的事情
+                        if (mMessage.equals(null)){
+                            Toast.makeText(getApplicationContext(),"控制失败",Toast.LENGTH_SHORT).show();
+                        }
+                        handler.postDelayed(this, 2000);
+                    }
+                };
+            }
+        });
+
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //取消对话框,进入主界面
+                mSwitch.setChecked(!isOpen);
+
+            }
+        });
+
+        //点击取消事件监听
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                //即使用户点击取消,也需要让其进入应用程序主界面
+                mSwitch.setChecked(!isOpen);
+                dialog.dismiss();
+            }
+        });
+
+        builder.show();
+    }
+
+
+
+
+    protected void showSwitch2Dialog(final boolean isOpen, final int factory, final String openOrNot) {
+        //对话框,是依赖于activity存在的
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //设置左上角图标
+        builder.setIcon(R.drawable.ic_launcher);
+        builder.setTitle("提示！！！");
+        //设置描述内容
+        if (isOpen){
+            builder.setMessage("即将打开水车");
+        }else {
+            builder.setMessage("即将关闭水车");
+        }
+
+
+        //积极按钮,立即更新
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //下载apk,apk链接地址,downloadUrl
+                Gson gson = new Gson();
+                EnvData env = new EnvData("app","username","communication",new ContentData("192.168.1.198",2,factory,null,"control#1#2#" + openOrNot));
+                Log.e("TestJson",gson.toJson(env));
+                String msg = gson.toJson(env).toString();
+                SessionManager.getInstance().writeToServer(msg);
+
+                //自定义定时器
+                final Handler handler = new Handler();
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        //要做的事情
+                        if (mMessage.equals(null)){
+                            Toast.makeText(getApplicationContext(),"控制失败",Toast.LENGTH_SHORT).show();
+                        }
+                        handler.postDelayed(this, 2000);
+                    }
+                };
+            }
+        });
+
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //取消对话框,进入主界面
+                mSwitch1.setChecked(!isOpen);
+
+            }
+        });
+
+        //点击取消事件监听
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                //即使用户点击取消,也需要让其进入应用程序主界面
+                mSwitch1.setChecked(!isOpen);
+                dialog.dismiss();
+            }
+        });
+
+        builder.show();
+    }
 }

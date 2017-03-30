@@ -2,6 +2,8 @@ package com.jit.shuichan.ui.diary;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -13,10 +15,12 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.pickerview.TimePickerView;
 import com.jit.shuichan.R;
 import com.jit.shuichan.ui.dropdownedit.DropEditText;
 import com.lidroid.xutils.http.client.multipart.MultipartEntity;
@@ -28,9 +32,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import me.iwf.photopicker.PhotoPicker;
 
@@ -38,6 +49,7 @@ import static com.jit.shuichan.http.NetUtils.buyNameURL;
 import static com.jit.shuichan.http.NetUtils.getBuyTypeRequest;
 import static com.jit.shuichan.http.NetUtils.getCurrentTime;
 import static com.jit.shuichan.http.NetUtils.getPondInfoRequest;
+import static com.jit.shuichan.http.NetUtils.getTime;
 import static com.jit.shuichan.http.NetUtils.loginRequest;
 import static com.jit.shuichan.http.NetUtils.postImage;
 import static com.jit.shuichan.http.NetUtils.throwSubmitURL;
@@ -88,6 +100,9 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
     protected static final int SHOW_SPINNER_POND = 101;
     protected static final int SUBMIT_SUCCESS = 102;
     protected static final int SHOW_DROPDOWN_INFO = 103;
+
+
+    private ImageView ivLog;
 
 
     //开启 Handler
@@ -223,6 +238,23 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
         throwTime = (TextView) findViewById(R.id.et_throwtime);
         throwTime.setText(getCurrentTime());
 
+
+        throwTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePickerView pickerView = new TimePickerView.Builder(FeedingActivity.this, new TimePickerView.OnTimeSelectListener() {
+                    @Override
+                    public void onTimeSelect(Date date, View v) {
+                        throwTime.setText(getTime(date));
+                    }
+                }).build();
+
+                pickerView.setDate(Calendar.getInstance());
+                pickerView.show();
+            }
+        });
+
+
         Button submitBtn = (Button) findViewById(R.id.btn_submit);
         Button uploadImgBtn = (Button) findViewById(R.id.btn_uploading);
         Button ThrowLogBtn = (Button) findViewById(R.id.btn_throwlog);
@@ -230,6 +262,10 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
         submitBtn.setOnClickListener(this);
         uploadImgBtn.setOnClickListener(this);
         ThrowLogBtn.setOnClickListener(this);
+
+
+
+        ivLog = (ImageView) findViewById(R.id.iv_log);
     }
 
 
@@ -246,9 +282,26 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
                 PhotoPicker.builder().setPhotoCount(1).setShowCamera(true).setPreviewEnabled(false).start(FeedingActivity.this,PhotoPicker.REQUEST_CODE);
                 break;
             case R.id.btn_throwlog:
-                Toast.makeText(getApplicationContext(),"投放日志",Toast.LENGTH_SHORT).show();
+                TestHistory();
                 break;
         }
+    }
+
+    private void TestHistory() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+//                String s = getSearchRequest("2", "1", "1", "do2", "2017-03-30", "2017-03-30", "01:00:00", "08:00:00");
+//                Log.e("历史数据",s);
+
+//                String s = downloadImage("88a3ec9178974a5bb9958f9c6b60cc56.octet-stream");
+//                Log.e("图片下载",s);
+
+
+                Bitmap urlImage = getUrlImage("http://210.28.188.98:8088/IntelligentAgriculture/patrolManage/loadImages?names=88a3ec9178974a5bb9958f9c6b60cc56.octet-stream");
+                ivLog.setImageBitmap(urlImage);
+            }
+        }).start();
     }
 
     private void submitToServer() {
@@ -500,9 +553,7 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
 
         if (resultCode == RESULT_OK && requestCode == PhotoPicker.REQUEST_CODE) {
             if (data != null) {
-                ArrayList<String> photos =
-                        data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
-
+                ArrayList<String> photos = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
                 Log.e("photoPath",photos.get(0));
                 imagePath = photos.get(0);
                 imageType = imagePath.substring(imagePath.lastIndexOf(".")+1);
@@ -510,5 +561,31 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
                 Log.e("图片类型",imageType);
             }
         }
+    }
+
+
+    //加载图片
+    public Bitmap getUrlImage(String url){
+        Bitmap img = null;
+        try {
+            URL picUrl = new URL(url);
+            HttpURLConnection conn = (HttpURLConnection) picUrl.openConnection();
+            conn.setConnectTimeout(6000);
+            conn.setDoInput(true);
+            conn.setUseCaches(false);
+            conn.connect();
+            InputStream is = conn.getInputStream();
+            img = BitmapFactory.decodeStream(is);
+            is.close();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            Log.e("异常","url异常" + e.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+            Log.e("异常","io异常" + e.toString());
+        }
+
+
+        return img;
     }
 }

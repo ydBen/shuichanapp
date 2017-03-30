@@ -77,7 +77,7 @@ public class MinaService extends Service{
             this.context = context;
 
             ConnectionConfig config = new ConnectionConfig.Builder(context)
-                    .setIp("218.94.144.228")
+                    .setIp("210.28.188.98")
                     .setPort(8008)
                     .setReadBufferSize(10240)
                     .setConnectionTimeout(10000).builder();

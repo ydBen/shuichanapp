@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.pickerview.TimePickerView;
 import com.jit.shuichan.R;
 import com.lidroid.xutils.http.client.multipart.MultipartEntity;
 import com.lidroid.xutils.http.client.multipart.content.FileBody;
@@ -28,12 +29,15 @@ import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import me.iwf.photopicker.PhotoPicker;
 
 import static com.jit.shuichan.http.NetUtils.buySubmitURL;
 import static com.jit.shuichan.http.NetUtils.getBuyTypeRequest;
 import static com.jit.shuichan.http.NetUtils.getCurrentTime;
+import static com.jit.shuichan.http.NetUtils.getTime;
 import static com.jit.shuichan.http.NetUtils.loginRequest;
 import static com.jit.shuichan.http.NetUtils.postImage;
 
@@ -274,6 +278,26 @@ public class ShoppingActivity extends Activity implements View.OnClickListener{
         productPrice = (EditText) findViewById(R.id.et_productprice);
         productTime = (TextView) findViewById(R.id.et_currenttime);
         productTime.setText(getCurrentTime());
+
+
+        productTime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TimePickerView pickerView = new TimePickerView.Builder(ShoppingActivity.this, new TimePickerView.OnTimeSelectListener() {
+                    @Override
+                    public void onTimeSelect(Date date, View v) {
+                        productTime.setText(getTime(date));
+                    }
+                }).build();
+
+                pickerView.setDate(Calendar.getInstance());
+                pickerView.show();
+            }
+        });
+
+
+
+
         Button submitBtn = (Button) findViewById(R.id.btn_submit);
         Button uploadImgBtn = (Button) findViewById(R.id.btn_uploadimg);
         Button buyLogBtn = (Button) findViewById(R.id.btn_buylog);
@@ -408,4 +432,6 @@ public class ShoppingActivity extends Activity implements View.OnClickListener{
             }
         }
     }
+
+
 }

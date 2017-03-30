@@ -119,6 +119,9 @@ public class LoginSelectActivity extends Activity implements OnClickListener{
                     toIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     LoginSelectActivity.this.startActivity(toIntent);
 
+
+                    finish();
+
                     break;
                 case PWD_ERROR:
                     Toast.makeText(getApplicationContext(),"用户名或密码错误",Toast.LENGTH_SHORT).show();
@@ -244,7 +247,7 @@ public class LoginSelectActivity extends Activity implements OnClickListener{
                 long startTime = System.currentTimeMillis();
                 try {
                     //1,封装url地址
-                    URL url = new URL("http://218.94.144.228:8088/author.json");
+                    URL url = new URL("http://210.28.188.98:8088/author.json");
                     //2,开启一个链接
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     //3,设置常见请求参数(请求头)
@@ -340,7 +343,7 @@ public class LoginSelectActivity extends Activity implements OnClickListener{
                 long startTime = System.currentTimeMillis();
                 try {
                     //1,封装url地址
-                    URL url = new URL("http://218.94.144.228:8088/YinshiServlet/getToken?phone=18168092635");
+                    URL url = new URL("http://210.28.188.98:8088/YinshiServlet/getToken?phone=18168092635");
                     //2,开启一个链接
                     HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                     //3,设置常见请求参数(请求头)

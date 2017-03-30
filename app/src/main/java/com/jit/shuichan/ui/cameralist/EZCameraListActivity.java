@@ -32,6 +32,7 @@ import android.os.Message;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -954,5 +955,19 @@ public class EZCameraListActivity extends Activity implements OnClickListener,Se
                 }
             }
         }).start();
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK  && event.getAction()== KeyEvent.ACTION_DOWN ){
+            Intent backhome = new Intent(Intent.ACTION_MAIN);
+            backhome.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            backhome.addCategory(Intent.CATEGORY_HOME);
+
+            startActivity(backhome);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

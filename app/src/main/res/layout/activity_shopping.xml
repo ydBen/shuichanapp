@@ -280,7 +280,8 @@
             android:padding="7dp"
             android:background="@drawable/edittext_bg"
             android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"/>
+            android:layout_marginLeft="20dp"
+            android:clickable="true"/>
 
 
 
