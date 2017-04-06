@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ECECEC"
     >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
 
 
 
@@ -227,9 +232,117 @@
         android:textSize="16sp"/>
 
 
+    <LinearLayout
+        android:id="@+id/ll_search"
+        android:layout_toRightOf="@id/tv_his"
+        android:layout_below="@id/controlitem"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:orientation="vertical">
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btn_type"
+
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:text="溶解氧"
+                android:textColor="#fff"
+                android:drawablePadding="5dp"
+                android:background="@drawable/btn_roundedbg"
+                android:drawableRight="@drawable/arrow_next"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="开始:"/>
+            <TextView
+                android:id="@+id/tv_starttime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/edittext_bg"
+                android:padding="7dp"
+                android:clickable="true"
+                android:text="2017-04-01 14:09:30"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+
+
+            <Button
+                android:id="@+id/btn_search"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:text="查询"
+                android:textColor="#fff"
+                android:drawablePadding="5dp"
+                android:background="@drawable/btn_roundedbg"
+                android:drawableRight="@drawable/arrow_next"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="结束:"/>
+            <TextView
+                android:id="@+id/tv_endtime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:background="@drawable/edittext_bg"
+                android:padding="7dp"
+                android:clickable="true"
+                android:text="2017-04-01 14:09:30"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+        <lecho.lib.hellocharts.view.LineChartView
+            android:id="@+id/do2_chart"
+            android:layout_below="@id/ll_search"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="20dp"/>
+
+        <lecho.lib.hellocharts.view.LineChartView
+            android:id="@+id/PH_chart"
+            android:layout_below="@id/do2_chart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="20dp"/>
+
+        <lecho.lib.hellocharts.view.LineChartView
+            android:id="@+id/temp_chart"
+            android:layout_below="@id/PH_chart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:layout_marginTop="20dp"/>
 
 
 
 
 
-</RelativeLayout>
+
+
+
+
+
+    </RelativeLayout>
+
+
+</ScrollView>

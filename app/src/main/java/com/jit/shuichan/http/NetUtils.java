@@ -32,6 +32,7 @@ import java.io.InputStreamReader;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -43,7 +44,8 @@ import java.util.Map;
 
 public class NetUtils {
 
-    //172.19.73.103
+    //172.19.73.103    172.19.73.27
+//    public static final String Url = "http://172.19.73.27:8080/IntelligentAgriculture/";
     public static final String Url = "http://210.28.188.98:8088/IntelligentAgriculture/";
     public static String JSESSIONID;
     private static HttpParams httpParams;
@@ -148,7 +150,7 @@ public class NetUtils {
 
 
     // 历史数据 查询
-    public static final String searchURL = Url + "src/com/software/controller/dataDisplay/historydata";
+    public static final String searchURL = Url + "dataDisplay/historydata";
     public static ArrayList<BasicNameValuePair> searchValues = new ArrayList<BasicNameValuePair>();
 
 
@@ -171,6 +173,9 @@ public class NetUtils {
 
     public static final String SUCCESS = "1";
     public static final String FAILURE = "0";
+
+
+    public String mDataType;
 
     /**
      * 对网络连接状态进行判断
@@ -312,6 +317,8 @@ public class NetUtils {
 
 
                 return EntityUtils.toString(response.getEntity());
+            }else {
+                Log.e("post", "访问失败：responseCode=" + statueCode);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -479,6 +486,7 @@ public class NetUtils {
 
     public static String getSearchRequest(String companyId,String factoryId,String sensorId,String dataType,String startDate,String endDate,String startTime,String endTime){
 //        String currentTime = getCurrentTime();
+        Log.e("历史数据类型",dataType);
 
         searchValues.add(new BasicNameValuePair("comid",companyId));
         searchValues.add(new BasicNameValuePair("facid",factoryId));
@@ -514,6 +522,52 @@ public class NetUtils {
     public static String getCurrentTime() {
         //"yyyy年MM月dd日   HH:mm:ss"
         SimpleDateFormat formatter   =   new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date curDate =  new Date(System.currentTimeMillis());
+//获取当前时间
+        String   str   =   formatter.format(curDate);
+
+        return str;
+    }
+
+
+    public static String getForeDateTimeDate() {
+
+        //"yyyy年MM月dd日   HH:mm:ss"
+        SimpleDateFormat formatter   =   new SimpleDateFormat("yyyy-MM-dd");
+        Date curDate =  new Date(System.currentTimeMillis());
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(curDate);
+        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        curDate = calendar.getTime();
+        String   str   =   formatter.format(curDate);
+        return str;
+    }
+
+
+    public static String getCurrentTimeDate() {
+        //"yyyy年MM月dd日   HH:mm:ss"
+        SimpleDateFormat formatter   =   new SimpleDateFormat("yyyy-MM-dd");
+        Date curDate =  new Date(System.currentTimeMillis());
+//获取当前时间
+        String   str   =   formatter.format(curDate);
+
+        return str;
+    }
+
+    public static String getCurrentTimeMiao() {
+        //"yyyy年MM月dd日   HH:mm:ss"
+        SimpleDateFormat formatter   =   new SimpleDateFormat("HH:mm:ss");
+        Date curDate =  new Date(System.currentTimeMillis());
+//获取当前时间
+        String   str   =   formatter.format(curDate);
+
+        return str;
+    }
+
+    public static String getCurrentMiaoTime() {
+        //"yyyy年MM月dd日   HH:mm:ss"
+        SimpleDateFormat formatter   =   new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date curDate =  new Date(System.currentTimeMillis());
 //获取当前时间
         String   str   =   formatter.format(curDate);
@@ -568,6 +622,33 @@ public class NetUtils {
             Log.e("TestFile", "Error on writeFilToSD.");
             e.printStackTrace();
         }
+    }
+
+    /*
+    * 获取巡视内容的类别（水肥度，水色，水溶解氧等信息）
+    * */
+    public static String getPatrolTypeRequset(){
+        String currentTime = getCurrentTime();
+        patrolTypeValues.add(new BasicNameValuePair("time",currentTime));
+        String s = postRequest(patrolTypeURL,patrolTypeValues);
+        return s;
+    }
+
+    public static String getPatrolDataTypeRequest(){
+        String currentTime = getCurrentTime();
+        manualDataValues.add(new BasicNameValuePair("time",currentTime));
+        String s = postRequest(manualDataURL,manualDataValues);
+        return s;
+    }
+
+    /*
+    * 获取生产措施的类别（溶解氧，水温,PH值等信息）
+    * */
+    public static String getMeasureTypeRequest(){
+        String currentTime = getCurrentTime();
+        measureTypeValues.add(new BasicNameValuePair("time",currentTime));
+        String s = postRequest(measureTypeURL,measureTypeValues);
+        return s;
     }
 
 }

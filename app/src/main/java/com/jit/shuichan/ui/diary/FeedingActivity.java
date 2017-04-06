@@ -1,28 +1,30 @@
 package com.jit.shuichan.ui.diary;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
+import android.text.Selection;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bigkoo.pickerview.TimePickerView;
 import com.jit.shuichan.R;
-import com.jit.shuichan.ui.dropdownedit.DropEditText;
 import com.lidroid.xutils.http.client.multipart.MultipartEntity;
 import com.lidroid.xutils.http.client.multipart.content.FileBody;
 import com.lidroid.xutils.http.client.multipart.content.StringBody;
@@ -31,6 +33,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,10 +48,10 @@ import java.util.Date;
 
 import me.iwf.photopicker.PhotoPicker;
 
-import static com.jit.shuichan.http.NetUtils.buyNameURL;
 import static com.jit.shuichan.http.NetUtils.getBuyTypeRequest;
 import static com.jit.shuichan.http.NetUtils.getCurrentTime;
 import static com.jit.shuichan.http.NetUtils.getPondInfoRequest;
+import static com.jit.shuichan.http.NetUtils.getSearchRequest;
 import static com.jit.shuichan.http.NetUtils.getTime;
 import static com.jit.shuichan.http.NetUtils.loginRequest;
 import static com.jit.shuichan.http.NetUtils.postImage;
@@ -71,9 +74,9 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
     private ArrayAdapter<String> throw_adapterDetail;
     private String[] throwDetailStrs;
 
-    private Spinner spAmount;
-    private ArrayAdapter<String> amount_adapter;
-    private String[] amountStrs;
+//    private Spinner spAmount;
+//    private ArrayAdapter<String> amount_adapter;
+//    private String[] amountStrs;
 
     private String jinOrcheStr;
     private String throwStr;
@@ -83,10 +86,12 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
     private String imageType;
 
     private TextView productNameText;
-    private DropEditText drop;
+//    private DropEditText drop;
 
-    private EditText throwAmount;
+    private EditText throwPrice;
+    private EditText throwName;
     private TextView throwTime;
+    private LinearLayout llAddName;
 
     private ArrayList<String> inputType;
     private ArrayList<String> inputTypeName;
@@ -99,10 +104,11 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
     protected static final int SHOW_SPINNER_PRODUCT = 100;
     protected static final int SHOW_SPINNER_POND = 101;
     protected static final int SUBMIT_SUCCESS = 102;
-    protected static final int SHOW_DROPDOWN_INFO = 103;
+//    protected static final int SHOW_DROPDOWN_INFO = 103;
 
 
     private ImageView ivLog;
+    private Bitmap urlImage;
 
 
     //开启 Handler
@@ -116,9 +122,9 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
                 case SHOW_SPINNER_POND:
                     showSpinnerPond();
                     break;
-                case SHOW_DROPDOWN_INFO:
-                    showDropDownInfo();
-                    break;
+//                case SHOW_DROPDOWN_INFO:
+//                    showDropDownInfo();
+//                    break;
                 case SUBMIT_SUCCESS:
                     Toast.makeText(getApplicationContext(), "投放数据已保存", Toast.LENGTH_SHORT).show();
                     break;
@@ -140,21 +146,21 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
     private void initData() {
 
 
-        amountStrs = new String[]{"斤", "车"};
-        amount_adapter = new ArrayAdapter<String>(this, R.layout.custom_spiner_text_item, amountStrs);
-        amount_adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
-        spAmount.setAdapter(amount_adapter);
-        spAmount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                jinOrcheStr = amountStrs[i];
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+//        amountStrs = new String[]{"斤", "车"};
+//        amount_adapter = new ArrayAdapter<String>(this, R.layout.custom_spiner_text_item, amountStrs);
+//        amount_adapter.setDropDownViewResource(R.layout.custom_spinner_dropdown_item);
+//        spAmount.setAdapter(amount_adapter);
+//        spAmount.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+//                jinOrcheStr = amountStrs[i];
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> adapterView) {
+//
+//            }
+//        });
 
         getDataFromServer();
     }
@@ -230,11 +236,12 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
         spThrowDetail = (Spinner) findViewById(R.id.sp_throwdetail);
 
         //物品名称Spinner
-        drop = (DropEditText) findViewById(R.id.drop_edit);
+//        drop = (DropEditText) findViewById(R.id.drop_edit);
 
         //斤or车
-        spAmount = (Spinner) findViewById(R.id.sp_amount);
-        throwAmount = (EditText) findViewById(R.id.et_throwamount);
+//        spAmount = (Spinner) findViewById(R.id.sp_amount);
+        throwName = (EditText) findViewById(R.id.et_pname);
+        throwPrice = (EditText) findViewById(R.id.et_throwprice);
         throwTime = (TextView) findViewById(R.id.et_throwtime);
         throwTime.setText(getCurrentTime());
 
@@ -255,10 +262,13 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
         });
 
 
+        llAddName = (LinearLayout) findViewById(R.id.ll_etname);
         Button submitBtn = (Button) findViewById(R.id.btn_submit);
         Button uploadImgBtn = (Button) findViewById(R.id.btn_uploading);
         Button ThrowLogBtn = (Button) findViewById(R.id.btn_throwlog);
+        Button addBtn = (Button) findViewById(R.id.btn_addname);
 
+        addBtn.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
         uploadImgBtn.setOnClickListener(this);
         ThrowLogBtn.setOnClickListener(this);
@@ -284,6 +294,41 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
             case R.id.btn_throwlog:
                 TestHistory();
                 break;
+            case R.id.btn_addname:
+                final EditText etDia = new EditText(this);
+                if (throwName.getText().toString().equals("")){
+                    etDia.setText(throwName.getText().toString());
+                }else {
+                    etDia.setText(throwName.getText().toString() + ";");
+                }
+
+                Editable etext = etDia.getText();
+                Selection.setSelection(etext, etext.length());
+
+
+                new AlertDialog.Builder(this).setTitle("物品名称")
+                        .setIcon(android.R.drawable.ic_dialog_info)
+                        .setView(etDia)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+
+                                if (etDia.getText().toString().equals("")) {
+                                    Toast.makeText(getApplicationContext(), "内容为空！", Toast.LENGTH_LONG).show();
+                                }else {
+                                    if (etDia.getText().toString().substring(etDia.getText().toString().length() - 1).equals(";")){
+                                        throwName.setText(etDia.getText().toString().substring(0,etDia.getText().toString().length() - 1));
+                                    }else {
+                                        throwName.setText(etDia.getText().toString());
+                                    }
+
+                                }
+                                Editable etext = throwName.getText();
+                                Selection.setSelection(etext, etext.length());
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .show();
+                break;
         }
     }
 
@@ -291,21 +336,54 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
         new Thread(new Runnable() {
             @Override
             public void run() {
-//                String s = getSearchRequest("2", "1", "1", "do2", "2017-03-30", "2017-03-30", "01:00:00", "08:00:00");
-//                Log.e("历史数据",s);
+                String s = getSearchRequest("2", "1", "1", "do2_1", "2017-03-30", "2017-03-30", "01:00:00", "08:00:00");
+                Log.e("历史数据",s);
+//                MultipartEntity multipartEntity = new MultipartEntity();
+//                try {
+//                    multipartEntity.addPart("buy_dailyinputtype",);
+//                    multipartEntity.addPart("buy_sub_dailyinputtype",new StringBody(productDetailStr, Charset.forName("UTF-8")));
+//                    multipartEntity.addPart("buy_name",new StringBody(productName.getText().toString(), Charset.forName("UTF-8")));
+//                    multipartEntity.addPart("buy_count",new StringBody(productAmount.getText().toString(), Charset.forName("UTF-8")));
+//                    multipartEntity.addPart("buy_unit",new StringBody(jinOrcheStr, Charset.forName("UTF-8")));
+//                    multipartEntity.addPart("buy_value",new StringBody(productPrice.getText().toString(), Charset.forName("UTF-8")));
+//                    if (imagePath == null || imagePath.trim().equals("")){
+//                        multipartEntity.addPart("buy_image",new FileBody(new File("/sdcard/test/file.txt")));
+//                    }else{
+//                        multipartEntity.addPart("buy_image",new FileBody(new File(imagePath)));
+//                    }
+//                    multipartEntity.addPart("buy_activetime",new StringBody(productTime.getText().toString(), Charset.forName("UTF-8")));
+//
+//
+//
+//                } catch (UnsupportedEncodingException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                String s = postImage(searchURL,multipartEntity);
 
-//                String s = downloadImage("88a3ec9178974a5bb9958f9c6b60cc56.octet-stream");
+
+
+
+//                String s = downloadImage("[7dce0988aff847f4bfc732aac4f9b44d.jpeg]");
 //                Log.e("图片下载",s);
 
 
-                Bitmap urlImage = getUrlImage("http://210.28.188.98:8088/IntelligentAgriculture/patrolManage/loadImages?names=88a3ec9178974a5bb9958f9c6b60cc56.octet-stream");
-                ivLog.setImageBitmap(urlImage);
+//                urlImage = getUrlImage("http://172.19.73.27:8080/IntelligentAgriculture/patrolManage/loadImages?names=[7dce0988aff847f4bfc732aac4f9b44d.jpeg]");
+//
+//                EzvizApplication.runOnUIThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        Toast.makeText(EzvizApplication.getContext(),"获取图片",Toast.LENGTH_LONG).show();
+//                        ivLog.setImageBitmap(urlImage);
+//                    }
+//                });
+
             }
         }).start();
     }
 
     private void submitToServer() {
-        if (drop.mEditText.getText().toString().trim().equals("") || throwAmount.getText().toString().trim().equals("") || throwTime.getText().toString().trim().equals("")){
+        if (throwName.getText().toString().trim().equals("") || throwPrice.getText().toString().trim().equals("") || throwTime.getText().toString().trim().equals("")){
             Toast.makeText(getApplicationContext(),"请用户填写完整信息",Toast.LENGTH_SHORT).show();
         }else {
             new Thread(new Runnable() {
@@ -318,9 +396,10 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
                         multipartEntity.addPart("throw_pondId",new StringBody(pondIdStr, Charset.forName("UTF-8")));
                         multipartEntity.addPart("throw_dailyinputtype",new StringBody(throwStr, Charset.forName("UTF-8")));
                         multipartEntity.addPart("throw_sub_dailyinputtype",new StringBody(throwDetailStr, Charset.forName("UTF-8")));
-                        multipartEntity.addPart("throw_name_edit",new StringBody(drop.mEditText.getText().toString(), Charset.forName("UTF-8")));
-                        multipartEntity.addPart("throw_count",new StringBody(throwAmount.getText().toString(), Charset.forName("UTF-8")));
-                        multipartEntity.addPart("throw_unit",new StringBody(jinOrcheStr, Charset.forName("UTF-8")));
+                        multipartEntity.addPart("throw_name_edit",new StringBody(throwName.getText().toString(), Charset.forName("UTF-8")));
+//                        multipartEntity.addPart("throw_count",new StringBody(throwAmount.getText().toString(), Charset.forName("UTF-8")));
+//                        multipartEntity.addPart("throw_unit",new StringBody(jinOrcheStr, Charset.forName("UTF-8")));
+                        multipartEntity.addPart("throw_price_all",new StringBody(throwPrice.getText().toString(), Charset.forName("UTF-8")));
                         if (imagePath == null || imagePath.trim().equals("")){
                             multipartEntity.addPart("throw_image",new FileBody(new File("/sdcard/test/file.txt")));
                         }else{
@@ -440,7 +519,7 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
                         public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                             throwStr = "-1";
                             throwDetailStr = String.valueOf(productArray.size()-2 + i +1);
-                            showBuyNameInfo(throwDetailStr);
+//                            showBuyNameInfo(throwDetailStr);
                         }
 
                         @Override
@@ -452,11 +531,11 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
                     if (productArray.get(i).equals("其它")){
                         throwStr = "8";
                         throwDetailStr = "100";
-                        showBuyNameInfo(throwStr);
+//                        showBuyNameInfo(throwStr);
                     }else {
                         throwStr = inputType.get(i);
                         throwDetailStr = "100";
-                        showBuyNameInfo(throwStr);
+//                        showBuyNameInfo(throwStr);
                     }
 
                 }
@@ -470,80 +549,80 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
         });
     }
 
-    private void showBuyNameInfo(String sss) {
-        final String  buyThingsId = sss;
-        //获取 物品名称
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Message message = Message.obtain();
-                MultipartEntity multipartEntity = new MultipartEntity();
-                try {
-                    multipartEntity.addPart("throwType", new StringBody(buyThingsId, Charset.forName("UTF-8")));
-                    multipartEntity.addPart("time", new StringBody(getCurrentTime(), Charset.forName("UTF-8")));
+//    private void showBuyNameInfo(String sss) {
+//        final String  buyThingsId = sss;
+//        //获取 物品名称
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                Message message = Message.obtain();
+//                MultipartEntity multipartEntity = new MultipartEntity();
+//                try {
+//                    multipartEntity.addPart("throwType", new StringBody(buyThingsId, Charset.forName("UTF-8")));
+//                    multipartEntity.addPart("time", new StringBody(getCurrentTime(), Charset.forName("UTF-8")));
+//
+//
+//                } catch (UnsupportedEncodingException e) {
+//                    e.printStackTrace();
+//                }
+//
+//                String buyThingRequest = postImage(buyNameURL, multipartEntity);
+//                Log.e("buyThingRequest",buyThingRequest);
+//                try {
+//                    JSONObject jo1 = new JSONObject(buyThingRequest);
+//                    JSONArray buythingsArray = jo1.getJSONArray("buythings");
+//                    if (buyThingsName != null){
+//                        buyThingsName.clear();
+//                        Log.e("clear","clear数组");
+//                    }
+//                    buyThingsName = new ArrayList<String>();
+//                    for (int i = 0; i<buythingsArray.length();i++){
+//                        JSONObject jo = (JSONObject) buythingsArray.opt(i);
+//                        buyThingsName.add(jo.getString("Name"));
+//                        Log.e("buythingslist",buyThingsName.get(i));
+//                    }
+//                    //for循环结束展示数据
+//                    message.what = SHOW_DROPDOWN_INFO;
+//
+//                } catch (JSONException e) {
+//                    e.printStackTrace();
+//                    Log.e("投放物品解析异常",e.toString());
+//                }finally {
+//                    mHandler.sendMessage(message);
+//                }
+//
+//
+//
+//            }
+//        }).start();
+//    }
 
 
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                }
-
-                String buyThingRequest = postImage(buyNameURL, multipartEntity);
-                Log.e("buyThingRequest",buyThingRequest);
-                try {
-                    JSONObject jo1 = new JSONObject(buyThingRequest);
-                    JSONArray buythingsArray = jo1.getJSONArray("buythings");
-                    if (buyThingsName != null){
-                        buyThingsName.clear();
-                        Log.e("clear","clear数组");
-                    }
-                    buyThingsName = new ArrayList<String>();
-                    for (int i = 0; i<buythingsArray.length();i++){
-                        JSONObject jo = (JSONObject) buythingsArray.opt(i);
-                        buyThingsName.add(jo.getString("Name"));
-                        Log.e("buythingslist",buyThingsName.get(i));
-                    }
-                    //for循环结束展示数据
-                    message.what = SHOW_DROPDOWN_INFO;
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                    Log.e("投放物品解析异常",e.toString());
-                }finally {
-                    mHandler.sendMessage(message);
-                }
-
-
-
-            }
-        }).start();
-    }
-
-
-    private void showDropDownInfo() {
-        drop.setAdapter(new BaseAdapter() {
-            @Override
-            public int getCount() {
-                return buyThingsName.size();
-            }
-
-            @Override
-            public Object getItem(int i) {
-                return buyThingsName.get(i);
-            }
-
-            @Override
-            public long getItemId(int i) {
-                return i;
-            }
-
-            @Override
-            public View getView(int i, View view, ViewGroup viewGroup) {
-                productNameText = new TextView(FeedingActivity.this);
-                productNameText.setText(buyThingsName.get(i));
-                return productNameText;
-            }
-        });
-    }
+//    private void showDropDownInfo() {
+//        drop.setAdapter(new BaseAdapter() {
+//            @Override
+//            public int getCount() {
+//                return buyThingsName.size();
+//            }
+//
+//            @Override
+//            public Object getItem(int i) {
+//                return buyThingsName.get(i);
+//            }
+//
+//            @Override
+//            public long getItemId(int i) {
+//                return i;
+//            }
+//
+//            @Override
+//            public View getView(int i, View view, ViewGroup viewGroup) {
+//                productNameText = new TextView(FeedingActivity.this);
+//                productNameText.setText(buyThingsName.get(i));
+//                return productNameText;
+//            }
+//        });
+//    }
 
 
 
@@ -574,9 +653,22 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
             conn.setDoInput(true);
             conn.setUseCaches(false);
             conn.connect();
-            InputStream is = conn.getInputStream();
-            img = BitmapFactory.decodeStream(is);
-            is.close();
+            int responseCode = conn.getResponseCode();
+            if (responseCode == 200) {
+                InputStream is = conn.getInputStream();
+                // 根据流数据创建 一个Bitmap位图对象
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                Log.e("post", "访问成功：responseCode=" + responseCode);
+                is.close();
+                return bitmap;
+
+
+            } else {
+                Log.e("post", "访问失败：responseCode=" + responseCode);
+            }
+
+
+            return null;
         } catch (MalformedURLException e) {
             e.printStackTrace();
             Log.e("异常","url异常" + e.toString());
@@ -586,6 +678,18 @@ public class FeedingActivity extends Activity implements View.OnClickListener {
         }
 
 
-        return img;
+        return null;
+    }
+
+    public static byte[] readStream(InputStream inStream) throws Exception{
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        while( (len=inStream.read(buffer)) != -1){
+            outStream.write(buffer, 0, len);
+        }
+        outStream.close();
+        inStream.close();
+        return outStream.toByteArray();
     }
 }

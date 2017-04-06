@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:drop="http://schemas.android.com/tools"
+    android:background="@color/opensdk_cameralist_bg">
+
+    <!-- 标题栏 -->
+    <RelativeLayout android:layout_width="match_parent"
+        android:id="@+id/title"
+        android:layout_height="44dp">
+
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="wrap_content"
+            android:background="@drawable/back"
+            android:layout_marginLeft="10dp"
+            android:layout_centerVertical="true"
+            android:layout_height="wrap_content"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/area_title_Tv"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:text="巡视检查"
+                android:textSize="18sp"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:background="@color/gray"
+            android:layout_alignParentBottom="true"
+            android:layout_height="0.5dp"></RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_patrol_first"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/throwicon"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="塘口:"
+                    />
+                <Spinner
+                    android:id="@+id/sp_area"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="35dp"
+                    android:layout_marginLeft="20dp">
+                </Spinner>
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+    <!--第二行数据，用以显示单选按钮，选择是之后，跳出数据类型，数值等内容，选择否，则没有-->
+    <LinearLayout
+        android:id="@+id/ll_patrol_second"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#fff"
+        android:gravity="center"
+        android:layout_marginTop="10dp">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/amounticon"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginLeft="20dp">
+
+            <!--第一行数据，用以选择塘口，选择巡视的对象，类别，状态-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="巡视:" />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="10dp">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <Spinner
+                            android:id="@+id/sp_object"
+                            android:layout_width="wrap_content"
+                            android:layout_height="35dp"
+                            android:layout_marginTop="10dp">
+                        </Spinner>
+
+                        <Spinner
+                            android:id="@+id/sp_type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="35dp"
+                            android:layout_marginTop="10dp" >
+                        </Spinner>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <Spinner
+                            android:id="@+id/sp_state1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="35dp"
+                            android:layout_marginTop="10dp" >
+                        </Spinner>
+
+                        <Spinner
+                            android:id="@+id/sp_state2"
+                            android:layout_width="wrap_content"
+                            android:layout_height="35dp"
+                            android:layout_marginTop="10dp"
+                            android:visibility="gone">
+                        </Spinner>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_patrol_third"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_patrol"
+        android:background="#fff"
+        android:layout_marginTop="10dp">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/amounticon"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"/>
+
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="2dp"
+            android:orientation="vertical"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:layout_marginTop="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="录入数据:"/>
+
+                <RadioGroup
+                    android:layout_marginLeft="20dp"
+                    android:id="@+id/sp_radiogroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:orientation="horizontal">
+                    <RadioButton
+                        android:id="@+id/sp_radioyes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="是"
+                        android:checked="true" />
+
+                    <RadioButton
+                        android:id="@+id/sp_radiono"
+                        android:layout_marginLeft="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="否"/>
+                </RadioGroup>
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/sp_radio_isyes"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:orientation="vertical">
+            <LinearLayout
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="数据类型:"
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/textView" />
+
+                <Spinner
+                    android:id="@+id/sp_data_type"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_height="35dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="数值:"
+                    android:layout_gravity="center_vertical" />
+
+                <EditText
+                    android:id="@+id/sp_data_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="14sp"
+                    android:padding="5dp"
+                    android:layout_marginLeft="40dp"
+                    android:background="@drawable/edittext_bg"
+                    android:hint="数值"
+                    android:numeric="integer"
+                    android:layout_weight="0.97" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:text="正常值"
+                    android:layout_gravity="center_vertical" />
+                <TextView
+                    android:id="@+id/sp_normal_value"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:text="数值"
+                    android:layout_gravity="center_vertical" />
+            </LinearLayout>
+                </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_price"
+        android:background="#fff"
+        android:layout_marginTop="10dp">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/imageicon"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="28dp"
+            android:layout_marginLeft="20dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="上传图片" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_patrol_uploading"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:text="选择文件"
+            android:padding="5dp"
+            android:textSize="13sp"
+            android:textColor="#fff"
+            android:background="@drawable/btn_roundedbg"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"/>
+
+
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/ll_image"
+        android:background="#fff"
+        android:layout_marginTop="10dp">
+        <ImageView
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/timeicon"
+            android:layout_margin="10dp"
+            android:layout_gravity="center_vertical"/>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="28dp"
+            android:layout_marginLeft="20dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="活动时间" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/et_throwtime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:padding="7dp"
+            android:background="@drawable/edittext_bg"
+            android:hint="当前时间"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:padding="8dp"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/btn_patrol_throwlog"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="投放日志"
+            android:padding="12dp"
+            android:textSize="18sp"
+            android:textColor="#fff"
+            android:background="@drawable/btn_rounded_blue"
+            android:layout_gravity="center_vertical"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true" />
+
+        <Button
+            android:layout_marginLeft="20dp"
+            android:id="@+id/btn_patrol_submit"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ll_time"
+            android:text="提交"
+            android:textSize="18sp"
+            android:padding="12dp"
+            android:textColor="#fff"
+            android:background="@drawable/btn_rounded_green" />
+
+    </LinearLayout>
+
+    <!--<Button-->
+        <!--android:id="@+id/btn_submit"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/ll_time"-->
+        <!--android:text="提交"-->
+        <!--android:textSize="16sp"-->
+        <!--android:padding="12dp"-->
+        <!--android:textColor="#fff"-->
+        <!--android:background="@drawable/btn_submint"-->
+        <!--/>-->
+
+
+
+    <!--<Button-->
+        <!--android:id="@+id/btn_throwlog"-->
+        <!--android:layout_width="120dp"-->
+        <!--android:layout_height="40dp"-->
+        <!--android:text="投放日志"-->
+        <!--android:padding="5dp"-->
+        <!--android:textSize="18sp"-->
+        <!--android:textColor="#fff"-->
+        <!--android:background="@drawable/btn_rounded_blue"-->
+        <!--android:layout_gravity="center_vertical"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_marginBottom="20dp"/>-->
+
+</LinearLayout>

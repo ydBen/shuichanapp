@@ -57,7 +57,7 @@ import com.jit.shuichan.remoteplayback.list.PlayBackListActivity;
 import com.jit.shuichan.remoteplayback.list.RemoteListContant;
 import com.jit.shuichan.scan.main.CaptureActivity;
 import com.jit.shuichan.ui.diary.FeedingActivity;
-import com.jit.shuichan.ui.diary.ShoppingActivity;
+import com.jit.shuichan.ui.diary.PatrolActivity;
 import com.jit.shuichan.ui.message.EZMessageActivity2;
 import com.jit.shuichan.ui.realplay.EZRealPlayActivity;
 import com.jit.shuichan.ui.util.EZUtils;
@@ -477,13 +477,13 @@ public class EZCameraListActivity extends Activity implements OnClickListener,Se
 
         // 养殖日志 数据
         mTitleStrs = new String[]{
-            "日常采购","日常投放","巡视检查","生产措施"
+                "日常投放","巡视检查"    //,"日常采购","生产措施"
         };
         mDetailStrs = new String[]{
-            "饲养必需品购买","饲料投放情况","轻松记录异常","积累丰富经验"
+                "饲料投放情况","轻松记录异常"    //,"饲养必需品购买","积累丰富经验"
         };
         mMipMapIds = new int[]{
-                R.mipmap.shopping_btn,R.mipmap.feeding_btn,R.mipmap.checking_btn,R.mipmap.solution_ptn
+                R.mipmap.feeding_btn,R.mipmap.checking_btn    //,R.mipmap.shopping_btn,R.mipmap.solution_ptn
         };
 
         gvDiary = (GridView)findViewById(R.id.gv_diary);
@@ -495,18 +495,21 @@ public class EZCameraListActivity extends Activity implements OnClickListener,Se
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 switch (i){
-                    case 0:// 日常采购
-                        startActivity(new Intent(EZCameraListActivity.this, ShoppingActivity.class));
-                        break;
-                    case 1:// 日常投放
+                    case 0:// 日常投放
+//                        startActivity(new Intent(EZCameraListActivity.this, ShoppingActivity.class));
+
                         startActivity(new Intent(EZCameraListActivity.this, FeedingActivity.class));
                         break;
-                    case 2:// 巡视检查
-                        Log.e("gv","点击item2");
+                    case 1:// 巡视检查
+
+                        startActivity(new Intent(EZCameraListActivity.this, PatrolActivity.class));
                         break;
-                    case 3:// 生产措施
-                        Log.e("gv","点击item3");
-                        break;
+//                    case 2:
+//                        Log.e("gv","点击item2");
+//                        break;
+//                    case 3:// 生产措施
+//                        Log.e("gv","点击item3");
+//                        break;
                 }
             }
         });

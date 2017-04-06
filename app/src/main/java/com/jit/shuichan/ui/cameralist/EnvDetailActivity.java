@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,7 +15,10 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bigkoo.pickerview.OptionsPickerView;
+import com.bigkoo.pickerview.TimePickerView;
 import com.google.gson.Gson;
+import com.jit.shuichan.EzvizApplication;
 import com.jit.shuichan.R;
 import com.jit.shuichan.mina.MinaService;
 import com.jit.shuichan.mina.SessionManager;
@@ -24,19 +28,39 @@ import com.jit.shuichan.mina.gsondata.EnvData;
 import com.jit.shuichan.mina.gsondata.MessageEvent;
 import com.jit.shuichan.mina.gsondata.SensorInfo;
 import com.jit.shuichan.widget.UserPermission;
+import com.lidroid.xutils.http.client.multipart.MultipartEntity;
+import com.lidroid.xutils.http.client.multipart.content.StringBody;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+import lecho.lib.hellocharts.view.LineChartView;
+
+import static com.jit.shuichan.http.NetUtils.getCurrentMiaoTime;
+import static com.jit.shuichan.http.NetUtils.getCurrentTimeDate;
+import static com.jit.shuichan.http.NetUtils.getCurrentTimeMiao;
+import static com.jit.shuichan.http.NetUtils.getForeDateTimeDate;
+import static com.jit.shuichan.http.NetUtils.getMiaoTime;
+import static com.jit.shuichan.http.NetUtils.getSearchRequest;
+import static com.jit.shuichan.http.NetUtils.postImage;
+import static com.jit.shuichan.http.NetUtils.searchURL;
 
 /**
  * 鸡舍环境详情页面
  * Created by yuanyuan on 2017/1/3.
  */
 
-public class EnvDetailActivity extends Activity {
+public class EnvDetailActivity extends Activity implements View.OnClickListener {
     private EnvData mEnvData;
     private ArrayList<SensorInfo> mSensorInfos;
     private TextView mTV_temp;
@@ -46,10 +70,64 @@ public class EnvDetailActivity extends Activity {
     private Switch mSwitch;
     private Switch mSwitch1;
     private int mFactoryId;
+    private String mFaId;
+    private String mdoId;
+    private String mphOrtempId;
+    private String mdoString;
+    private String mphString;
+    private String mtempString;
     private String mMessage = null;
     private String mUser;
     private boolean mIsOpen;
     private String mOpenOrNotStr;
+
+    private Button btnType;
+    private Button btnSearch;
+    private TextView tvStartTime;
+    private TextView tvEndTime;
+
+    private LineChartView do2Chart;
+    private LineChartView PHChart;
+    private LineChartView tempChart;
+
+    private ArrayList<String> typeList = new ArrayList<String>();
+    private ArrayList<String> timeList = new ArrayList<String>();
+    private ArrayList<Double> valueList = new ArrayList<Double>();
+
+    private ArrayList<String> PHTimeList = new ArrayList<String>();
+    private ArrayList<Double> PHValueList = new ArrayList<Double>();
+
+    private ArrayList<String> tempTimeList = new ArrayList<String>();
+    private ArrayList<Double> tempValueList = new ArrayList<Double>();
+
+
+    /**
+     * 获取采购数据
+     */
+    protected static final int SHOW_DO2 = 100;
+    protected static final int SHOW_PH = 101;
+    protected static final int SHOW_TEMP = 102;
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what){
+                case SHOW_DO2:
+                    new ChartUtils(timeList,valueList,do2Chart,3,3.2,"溶解氧");
+                    getPHFromServer();
+                    break;
+                case SHOW_PH:
+                    new ChartUtils(PHTimeList,PHValueList,PHChart,5,12,"PH");
+                    getTempFromServer();
+                    break;
+                case SHOW_TEMP:
+                    new ChartUtils(tempTimeList,tempValueList,tempChart,0,8,"水温");
+                    break;
+            }
+        }
+    };
+
+
 
 
     @Override
@@ -72,8 +150,39 @@ public class EnvDetailActivity extends Activity {
         Intent intent = new Intent(this, MinaService.class);
         startService(intent);
 
+        VarifyID(mFactoryId);
+
         initView();
         initData();
+    }
+
+    private void VarifyID(int mFactoryId) {
+        if (mFactoryId == 1){
+            mFaId = "1";
+            mdoId = "1";
+            mphOrtempId = "2";
+
+            mdoString = "do2_1";
+            mphString = "ph_1";
+            mtempString = "water_temp_1";
+        }else if (mFactoryId == 2){
+            mFaId = "1";
+            mdoId = "3";
+            mphOrtempId = "4";
+
+            mdoString = "do2_2";
+            mphString = "ph_2";
+            mtempString = "water_temp_2";
+
+        }else {
+            mFaId =  String.valueOf(mFactoryId - 1);
+            mdoId = "1";
+            mphOrtempId = "2";
+
+            mdoString = "do2_1";
+            mphString = "ph_1";
+            mtempString = "water_temp_1";
+        }
     }
 
     private void initData() {
@@ -81,6 +190,147 @@ public class EnvDetailActivity extends Activity {
     }
 
     private void getHistoryFromServer() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                Message message = Message.obtain();
+
+                String s = getSearchRequest("2", mFaId, mdoId, mdoString, getForeDateTimeDate(), getCurrentTimeDate(), getCurrentTimeMiao(), getCurrentTimeMiao());
+//                String s1 = getSearchRequest("2", "1", "1", "do2_1", "2017-04-01", "2017-04-02", "15:00:00", "16:00:00");
+//                String s2 = getSearchRequest("2", "1", "2", "water_temp_1", "2017-04-01", "2017-04-02", "15:00:00", "16:00:00");
+
+
+//                Log.e("时间","当前日" + getCurrentTimeDate() + "当前秒" + getCurrentTimeMiao() + "前一天" +getForeDateTimeDate());
+//                Log.e("对应id","mFaId" + mFaId + "mdoId" + mdoId + "mdoString" + mdoString);
+
+
+                Log.e("溶解氧数据n",s);
+//                Log.e("PH数据n",s1);
+//                Log.e("水温数据n",s2);
+                try {
+                    JSONObject jo = new JSONObject(s);
+                    JSONArray dataArray = jo.getJSONArray("data");
+                    for (int i=0;i<dataArray.length();i++){
+                        JSONObject jo1 = (JSONObject) dataArray.opt(i);
+                        timeList.add(jo1.getString("time"));
+                        valueList.add(jo1.getDouble("value"));
+
+
+                    }
+                    //for循环结束展示数据
+                    message.what = SHOW_DO2;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }finally {
+                    mHandler.sendMessage(message);
+                }
+            }
+        }).start();
+    }
+
+
+
+
+    private void getPHFromServer() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                Message message = Message.obtain();
+
+
+                MultipartEntity multipartEntity = new MultipartEntity();
+                try {
+                    multipartEntity.addPart("comid", new StringBody("2", Charset.forName("UTF-8")));
+                    multipartEntity.addPart("facid", new StringBody(mFaId, Charset.forName("UTF-8")));
+                    multipartEntity.addPart("senid", new StringBody(mphOrtempId, Charset.forName("UTF-8")));
+                    multipartEntity.addPart("type", new StringBody(mphString, Charset.forName("UTF-8")));
+                    multipartEntity.addPart("startDate", new StringBody(getForeDateTimeDate(), Charset.forName("UTF-8")));
+                    multipartEntity.addPart("endDate", new StringBody(getCurrentTimeDate(), Charset.forName("UTF-8")));
+                    multipartEntity.addPart("startTime", new StringBody(getCurrentTimeMiao(), Charset.forName("UTF-8")));
+                    multipartEntity.addPart("endTime", new StringBody(getCurrentTimeMiao(), Charset.forName("UTF-8")));
+
+
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                String s = postImage(searchURL, multipartEntity);
+
+//                String s = getSearchRequest("2", "1", "1", "ph_1", "2017-04-01", "2017-04-03", "15:00:00", "16:00:00");
+                Log.e("PH数据",s);
+
+
+                try {
+                    JSONObject jo = new JSONObject(s);
+                    JSONArray dataArray = jo.getJSONArray("data");
+                    for (int i=0;i<dataArray.length();i++){
+                        JSONObject jo1 = (JSONObject) dataArray.opt(i);
+                        PHTimeList.add(jo1.getString("time"));
+                        PHValueList.add(jo1.getDouble("value"));
+
+
+                    }
+                    //for循环结束展示数据
+                    message.what = SHOW_PH;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }finally {
+                    mHandler.sendMessage(message);
+                }
+            }
+        }).start();
+    }
+
+
+    private void getTempFromServer() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+                Message message = Message.obtain();
+
+                MultipartEntity multipartEntity = new MultipartEntity();
+                try {
+                    multipartEntity.addPart("comid", new StringBody("2", Charset.forName("UTF-8")));
+                    multipartEntity.addPart("facid", new StringBody(mFaId, Charset.forName("UTF-8")));
+                    multipartEntity.addPart("senid", new StringBody(mphOrtempId, Charset.forName("UTF-8")));
+                    multipartEntity.addPart("type", new StringBody(mtempString, Charset.forName("UTF-8")));
+                    multipartEntity.addPart("startDate", new StringBody(getForeDateTimeDate(), Charset.forName("UTF-8")));
+                    multipartEntity.addPart("endDate", new StringBody(getCurrentTimeDate(), Charset.forName("UTF-8")));
+                    multipartEntity.addPart("startTime", new StringBody(getCurrentTimeMiao(), Charset.forName("UTF-8")));
+                    multipartEntity.addPart("endTime", new StringBody(getCurrentTimeMiao(), Charset.forName("UTF-8")));
+
+
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                String s = postImage(searchURL, multipartEntity);
+
+//                String s = getSearchRequest("2", "1", "1", "water_temp_1", "2017-04-01", "2017-04-03", "15:00:00", "16:00:00");
+                Log.e("水温数据",s);
+
+                try {
+                    JSONObject jo = new JSONObject(s);
+                    JSONArray dataArray = jo.getJSONArray("data");
+                    for (int i=0;i<dataArray.length();i++){
+                        JSONObject jo1 = (JSONObject) dataArray.opt(i);
+                        tempTimeList.add(jo1.getString("time"));
+                        tempValueList.add(jo1.getDouble("value"));
+
+
+                    }
+                    //for循环结束展示数据
+                    message.what = SHOW_TEMP;
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }finally {
+                    mHandler.sendMessage(message);
+                }
+            }
+        }).start();
     }
 
     private void initView() {
@@ -90,6 +340,29 @@ public class EnvDetailActivity extends Activity {
         mSwitch = (Switch)findViewById(R.id.switch_button);
         mSwitch1 = (Switch)findViewById(R.id.switch_button1);
         mTV_Title = (TextView) findViewById(R.id.area_title_Tv);
+
+        btnType = (Button) findViewById(R.id.btn_type);
+        btnSearch = (Button) findViewById(R.id.btn_search);
+        tvStartTime = (TextView) findViewById(R.id.tv_starttime);
+        tvEndTime = (TextView) findViewById(R.id.tv_endtime);
+
+        do2Chart = (LineChartView) findViewById(R.id.do2_chart);
+        PHChart = (LineChartView) findViewById(R.id.PH_chart);
+        tempChart = (LineChartView) findViewById(R.id.temp_chart);
+
+        typeList.add("溶解氧");
+        typeList.add("PH");
+        typeList.add("水温");
+
+        btnType.setOnClickListener(this);
+        btnSearch.setOnClickListener(this);
+        tvStartTime.setOnClickListener(this);
+        tvEndTime.setOnClickListener(this);
+
+        tvStartTime.setText(getCurrentMiaoTime());
+        tvEndTime.setText(getCurrentMiaoTime());
+
+
 
 
 
@@ -683,4 +956,141 @@ public class EnvDetailActivity extends Activity {
 
         builder.show();
     }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btn_type:
+
+                OptionsPickerView typePickerView = new OptionsPickerView.Builder(EnvDetailActivity.this, new OptionsPickerView.OnOptionsSelectListener() {
+                    @Override
+                    public void onOptionsSelect(int options1, int options2, int options3, View v) {
+                        btnType.setText(typeList.get(options1));
+                    }
+                }).build();
+
+                typePickerView.setPicker(typeList);
+                typePickerView.show();
+
+                break;
+            case R.id.btn_search:
+
+                refreshLineChart(btnType.getText().toString(),tvStartTime.getText().toString(),tvEndTime.getText().toString());
+
+                break;
+            case R.id.tv_starttime:
+
+                TimePickerView pickerView = new TimePickerView.Builder(EnvDetailActivity.this, new TimePickerView.OnTimeSelectListener() {
+                    @Override
+                    public void onTimeSelect(Date date, View v) {
+                        tvStartTime.setText(getMiaoTime(date));
+                    }
+                }).build();
+
+                pickerView.setDate(Calendar.getInstance());
+                pickerView.show();
+
+                break;
+            case R.id.tv_endtime:
+
+                TimePickerView pickerView1 = new TimePickerView.Builder(EnvDetailActivity.this, new TimePickerView.OnTimeSelectListener() {
+                    @Override
+                    public void onTimeSelect(Date date, View v) {
+                        tvEndTime.setText(getMiaoTime(date));
+                    }
+                }).build();
+
+                pickerView1.setDate(Calendar.getInstance());
+                pickerView1.show();
+
+                break;
+        }
+    }
+
+    private void refreshLineChart(String searchType, String startTime, String endTime) {
+        if (searchType.equals("溶解氧")){
+            timeList.clear();
+            valueList.clear();
+            searchFromServer(searchType,mdoId,mdoString,startTime,endTime,timeList,valueList);
+        }else if (searchType.equals("PH")){
+            PHTimeList.clear();
+            PHValueList.clear();
+            searchFromServer(searchType,mphOrtempId,mphString,startTime,endTime,PHTimeList,PHValueList);
+        }else if (searchType.equals("水温")){
+            tempTimeList.clear();
+            tempValueList.clear();
+            searchFromServer(searchType,mphOrtempId,mtempString,startTime,endTime,tempTimeList,tempValueList);
+        }
+    }
+
+    private void searchFromServer(final String searchType, final String mSensorId, final String mSensorString, final String startTime, final String endTime, final ArrayList<String> timeTypeList, final ArrayList<Double> valueTypeList) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+
+
+                String startDate = startTime.substring(0,10);
+                String startTimeS = startTime.substring(startTime.length() - 8);
+
+                String endDate = endTime.substring(0,10);
+                String endTimeS = endTime.substring(endTime.length() - 8);
+
+                MultipartEntity multipartEntity = new MultipartEntity();
+                try {
+                    multipartEntity.addPart("comid", new StringBody("2", Charset.forName("UTF-8")));
+                    multipartEntity.addPart("facid", new StringBody(mFaId, Charset.forName("UTF-8")));
+                    multipartEntity.addPart("senid", new StringBody(mSensorId, Charset.forName("UTF-8")));
+                    multipartEntity.addPart("type", new StringBody(mSensorString, Charset.forName("UTF-8")));
+                    multipartEntity.addPart("startDate", new StringBody(startDate, Charset.forName("UTF-8")));
+                    multipartEntity.addPart("endDate", new StringBody(endDate, Charset.forName("UTF-8")));
+                    multipartEntity.addPart("startTime", new StringBody(startTimeS, Charset.forName("UTF-8")));
+                    multipartEntity.addPart("endTime", new StringBody(endTimeS, Charset.forName("UTF-8")));
+
+
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+
+                String s = postImage(searchURL, multipartEntity);
+
+//                String s = getSearchRequest("2", "1", "1", "ph_1", "2017-04-01", "2017-04-03", "15:00:00", "16:00:00");
+                Log.e("PH数据",s);
+
+
+                try {
+                    JSONObject jo = new JSONObject(s);
+                    JSONArray dataArray = jo.getJSONArray("data");
+                    for (int i=0;i<dataArray.length();i++){
+                        JSONObject jo1 = (JSONObject) dataArray.opt(i);
+                        timeTypeList.add(jo1.getString("time"));
+                        valueTypeList.add(jo1.getDouble("value"));
+
+
+                    }
+
+
+                    EzvizApplication.runOnUIThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(EzvizApplication.getContext(),"查询成功",Toast.LENGTH_LONG).show();
+                            if (searchType.equals("溶解氧")){
+                                new ChartUtils(timeTypeList,valueTypeList,do2Chart,3,3.2,"溶解氧");
+                            }else if (searchType.equals("PH")){
+                                new ChartUtils(timeTypeList,valueTypeList,PHChart,3,3.2,"PH");
+                            }else if (searchType.equals("水温")){
+                                new ChartUtils(timeTypeList,valueTypeList,tempChart,3,3.2,"水温");
+                            }
+
+                        }
+                    });
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+    }
+
+
 }
